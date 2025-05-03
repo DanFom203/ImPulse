@@ -1,0 +1,15 @@
+@import './base.css';
+
+a,
+.green {
+  text-decoration: none;
+  color: var(--vt-c-green);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: var(--vtc-c-dark-green);
+  }
+}

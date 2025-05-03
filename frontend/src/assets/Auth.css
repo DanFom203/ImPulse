@@ -1,0 +1,114 @@
+@import './main.css'; /* или путь к твоему файлу */
+.auth-container {
+    max-width: 400px;
+    margin: 5rem auto;
+    padding: 2rem;
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    box-shadow: var(--vtc-c-dark-green);
+    color: #fff;
+    text-align: center;
+}
+
+.router-link {
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 1rem;
+}
+
+.form-floating {
+    margin-bottom: 1rem;
+}
+
+input {
+    font-size: 1.2rem;
+    padding: 10px;
+    border: 2px hsla(160, 100%, 37%, 1);
+    border-radius: 5px;
+    background-color: var(--vt-c-divider-dark-1);
+    color: hsla(160, 100%, 37%, 1);
+    width: 100%;
+    margin: 10px 0;
+    box-sizing: border-box;
+}
+
+/* Стили для фокуса на поле ввода */
+input:focus {
+    border-color: hsla(160, 100%, 37%, 1);
+    outline: none;
+    background-color: #222222; /* Темнее фон при фокусе */
+}
+
+/* Стили для кнопки submit */
+button {
+    background-color: var(--vt-c-green);
+    color: var(--vt-c-black);
+    padding: 10px 16px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: auto;
+    max-width: 240px;
+    display: block;
+    margin: 10px auto 0;
+}
+submit-button {
+    background-color: var(--vt-c-green);
+    color: var(--vt-c-black);
+    padding: 10px 16px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: auto;
+    max-width: 240px;
+    display: block;
+    margin: 10px auto 0;
+}
+
+/* Кнопка submit при наведении */
+button:hover {
+    background-color: var(--vt-c-green); /* Светло-зеленый при наведении */
+}
+
+.router-link {
+    color: var(--vt-c-green); /* Зеленый текст для ссылки */
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.router-link:hover {
+    text-decoration: underline;
+}
+
+.form-error {
+    min-height: 20px; /* или больше, если ошибки длинные */
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    text-align: left;
+    margin-top: 0.25rem;
+}
+.role-selector {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.role-selector label {
+    padding: 10px 16px;
+    border: 2px solid #666;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: transparent;
+    color: white;
+    transition: all 0.2s;
+}
+
+.role-selector label.active {
+    background-color: var(--vt-c-green); /* Зеленый */
+    border-color: var(--vt-c-black);
+    color: black;
+}
