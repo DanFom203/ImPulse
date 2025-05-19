@@ -115,10 +115,10 @@ export default {
   components: {BaseAuthForm, FormField, FormSubmit},
   setup() {
     const form = reactive({
-      email: 'ilya@ilya.com',
-      fullName: 'ilya',
-      password: '123123',
-      passwordRepeat: '123123',
+      email: '',
+      fullName: '',
+      password: '',
+      passwordRepeat: '',
       role: ''
     })
 
@@ -180,7 +180,7 @@ export default {
           this.form.role
       )
 
-      await this.register(dto);
+      await this.register(dto)
 
       if (!this.error) {
         this.$router.push({name: 'Home'})

@@ -2,7 +2,7 @@
   <header class="header">
     <h3 class="home-link">
       <router-link class="text-dark text-decoration-none" :to="{ name: 'Home' }">
-        ImPulse
+        TherapyHub
       </router-link>
     </h3>
     <ul class="nav">

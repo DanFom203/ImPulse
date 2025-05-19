@@ -1,6 +1,6 @@
 <template>
   <footer class="footer">
-    <p class="footer_inner">ImPulse</p>
+    <p class="footer_inner">TherapyHub</p>
   </footer>
 </template>
 

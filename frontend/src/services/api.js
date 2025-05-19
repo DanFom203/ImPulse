@@ -26,7 +26,7 @@ instance.interceptors.request.use(
 
 export async function apiLogin(loginDto) {
   const response = await noAuthInstance
-    .post('/auth/login', loginDto.toRepresentation())
+    .post('/auth/login/', loginDto.toRepresentation())
     .catch(defaultApiExceptionHandler)
 
   let token = response.data['token']
@@ -36,7 +36,7 @@ export async function apiLogin(loginDto) {
 
 export async function apiRegister(registrationDto) {
   const response = await noAuthInstance
-    .post('/auth/register', registrationDto.toRepresentation())
+    .post('/auth/register/', registrationDto.toRepresentation())
     .catch(defaultApiExceptionHandler)
 
   let token = response.data['token']
