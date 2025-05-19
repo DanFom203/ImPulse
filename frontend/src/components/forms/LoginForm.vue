@@ -53,8 +53,8 @@ export default {
   data() {
     return {
       form: {
-        email: '',
-        password: ''
+        email: 'ilya@ilya',
+        password: '123123'
       }
     }
   },
