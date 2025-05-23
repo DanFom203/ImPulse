@@ -14,6 +14,9 @@ import ru.itis.impulse_back.model.Message;
 import ru.itis.impulse_back.repository.ChatRepository;
 import ru.itis.impulse_back.repository.UserRepository;
 import ru.itis.impulse_back.security.service.JWTService;
+import ru.itis.impulse_back.service.MessageService;
+import ru.itis.impulse_back.service.impl.MessageServiceImpl;
+
 import java.util.Date;
 import java.util.Optional;
 
@@ -25,6 +28,7 @@ public class ChatController {
     private final JWTService jwtService;
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
+    private final MessageService messageService;
 
     @MessageMapping("/chat")
     @SendToUser("/queue/reply")
@@ -59,6 +63,7 @@ public class ChatController {
                 .createdAt(new Date())
                 .build();
 
+        messageService.saveMessage(request,senderId);
         simpMessagingTemplate.convertAndSendToUser(
                 request.getReceiverId().toString(),
                 "/queue/reply",

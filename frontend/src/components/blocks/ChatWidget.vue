@@ -4,26 +4,85 @@
       <h3>Chat with {{ interlocutor.fullName }}</h3>
       <button @click="$emit('close')">×</button>
     </div>
+
     <div class="chat-messages">
-      <p>Пример сообщения</p>
+      <p v-for="msg in messages" :key="msg.id">
+        {{ msg.body }}
+      </p>
     </div>
+
     <div class="chat-input">
-      <input type="text" placeholder="Type a message..." />
-      <button>Send</button>
+      <input
+          :id="'message-input-${interlocutor.id}'"
+          :name="'message-${interlocutor.id}'"
+          v-model="newMessage"
+          type="text"
+          placeholder="Type a message..."
+          :disabled="isConnecting"
+      @keyup.enter="send"
+      >
+      <button @click="send" :disabled="isConnecting"> <!-- 5. Используем свойство -->
+        {{ isConnecting ? 'Connecting...' : 'Send' }} <!-- 6. Отображаем состояние -->
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import { connectWebSocket, sendMessage } from '@/services/websocketService';
+import { useUserStore } from '@/stores/userStore';
+import { getTokenFromStorage } from '@/services/localData.js';
+
 export default {
   name: 'ChatWidget',
   props: {
-    interlocutor: {
-      type: Object,
-      required: true
+    interlocutor: Object
+  },
+  data() {
+    return {
+      newMessage: '',
+      messages: [],
+      isConnecting: false // 1. Добавляем свойство в data
+    };
+  },
+  async mounted() {
+    try {
+      this.isConnecting = true; // 2. Устанавливаем флаг подключения
+      await connectWebSocket(this.handleMessage);
+    } catch (error) {
+      console.error('Connection error:', error);
+      this.$router.push('/login');
+    } finally {
+      this.isConnecting = false; // 3. Сбрасываем флаг в любом случае
+    }
+  },
+  methods: {
+    handleMessage(msg) {
+      this.messages.push(msg);
+    },
+    async send() {
+      if (!this.newMessage.trim()) return;
+
+      try {
+        const messagePayload = {
+          receiverId: this.interlocutor.id,
+          body: this.newMessage
+        };
+
+        await sendMessage(messagePayload);
+        this.messages.push({
+          id: Date.now(),
+          body: this.newMessage,
+          sender: 'me'
+        });
+        this.newMessage = '';
+      } catch (error) {
+        console.error('Send failed:', error);
+        alert('Message sending failed. Please try again.');
+      }
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -47,6 +106,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   font-weight: bold;
+  color: black;
 }
 
 .chat-messages {
@@ -54,6 +114,8 @@ export default {
   height: 200px;
   overflow-y: auto;
   background: #fafafa;
+  color: black;
+  color: black;
 }
 
 .chat-input {
