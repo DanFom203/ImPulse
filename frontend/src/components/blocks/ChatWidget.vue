@@ -5,25 +5,91 @@
       <button @click="$emit('close')">×</button>
     </div>
     <div class="chat-messages">
-      <p>Пример сообщения</p>
+      <p v-for="(msg, index) in messages" :key="index">{{ msg.body }}</p>
     </div>
     <div class="chat-input">
-      <input type="text" placeholder="Type a message..." />
-      <button>Send</button>
+      <input
+          type="text"
+          v-model="messageText"
+          @keyup.enter="sendMessage"
+          placeholder="Type a message..."
+      />
+      <button @click="sendMessage">Send</button>
     </div>
   </div>
 </template>
-
 <script>
+import { Stomp } from '@stomp/stompjs'
+import { getTokenFromStorage } from '@/services/localData.js' // поправь путь
+
 export default {
-  name: 'ChatWidget',
   props: {
     interlocutor: {
       type: Object,
       required: true
     }
-  }
-}
+  },
+  data() {
+    return {
+      stompClient: null,
+      connected: false,
+      messages: [],
+      messageText: '',
+    }
+  },
+  mounted() {
+    this.connect()
+  },
+  methods: {
+    connect() {
+      const token = getTokenFromStorage();
+      if (!token) {
+        alert('Not authenticated');
+        return;
+      }
+
+      this.stompClient = Stomp.client('ws://localhost:8080/ws');
+      this.stompClient.connect(
+          { Authorization: `Bearer ${token}` },
+          (frame) => {
+            this.connected = true;
+            this.stompClient.subscribe('/user/queue/reply', (message) => {
+              const msg = JSON.parse(message.body);
+              this.messages.push(msg);
+            });
+          },
+          (error) => {
+            console.error('STOMP connection error:', error);
+          }
+      );
+    },
+
+    sendMessage() {
+      if (!this.connected) return;
+
+      const token = getTokenFromStorage();
+      if (!token) {
+        alert('Not authenticated');
+        return;
+      }
+
+      const payload = {
+        receiverId: this.interlocutor.id,
+        body: this.messageText,
+      };
+
+      this.stompClient.send(
+          '/app/chat',
+          { Authorization: `Bearer ${token}` },  // <-- Передаём токен в заголовке
+          JSON.stringify(payload)
+      );
+
+      this.messageText = '';
+    }
+
+  }}
+
+
 </script>
 
 <style scoped>
@@ -34,7 +100,7 @@ export default {
   width: 300px;
   border: 1px solid #ccc;
   background: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow: hidden;
   z-index: 999;

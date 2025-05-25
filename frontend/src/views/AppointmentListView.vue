@@ -73,6 +73,7 @@ export default {
       await this.approveAppointment(appointmentId)
     },
     openChat(user) {
+      console.log('openChat called with', user)
       this.selectedInterlocutor = user
     },
     closeChat() {
