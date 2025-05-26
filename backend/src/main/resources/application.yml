@@ -2,11 +2,27 @@ server:
   port: 8080
 
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: "jdbc:postgresql://localhost:5432/impulse_db"
-    username: postgres
-    password: postgres
+  primary:
+    datasource:
+      url: jdbc:postgresql://localhost:5432/impulse_db
+      username: postgres
+      password: postgres
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        pool-name: MasterPool
+
+
+  replica:
+    datasource:
+      url: jdbc:postgresql://localhost:5433/impulse_db
+      username: postgres
+      password: postgres
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        pool-name: ReplicaPool
+
+
+
   jpa:
     database: postgresql
     properties:
@@ -24,3 +40,10 @@ api:
   cors:
     allowed-origins: http://localhost:8080,http://localhost:5173,http://localhost:5174
       
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource: DEBUG
+    com.zaxxer.hikari.HikariDataSource: DEBUG
+    ru.itis.impulse_back.config.db: DEBUG
+
