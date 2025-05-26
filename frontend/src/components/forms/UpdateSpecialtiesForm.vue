@@ -1,6 +1,6 @@
 <template>
   <form action="POST" @submit.prevent="this.submit()" class="form">
-    <div class="title">Update specialties?</div>
+    <div class="title">Хотите обновить свою тренерскую специализацию?</div>
 
     <DefaultLoader v-if="specialtyStoreRequestData.loading" />
     <div class="specialties" v-else>
@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import { useSpecialtyStore } from '../../stores/specialtyStore.js'
-import { useUserStore } from '../../stores/userStore.js'
+import { useSpecialtyStore } from '@/stores/specialtyStore.js'
+import { useUserStore } from '@/stores/userStore.js'
 import { mapActions, mapState } from 'pinia'
 import FormSubmit from './FormSubmit.vue'
 import DefaultLoader from '../utils/DefaultLoader.vue'

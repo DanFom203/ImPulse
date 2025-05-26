@@ -24,6 +24,37 @@ instance.interceptors.request.use(
   }
 )
 
+export async function apiGetAllUsers() {
+  const response = await instance.get('/moderation/accounts').catch(defaultApiExceptionHandler)
+
+  const accountsList = response.data
+  return accountsList
+}
+
+export async function apiUpdateUserAuthority(email, authority) {
+  await instance.post(`/moderation/authority`, { email, authority }).catch(defaultApiExceptionHandler)
+}
+
+export async function apiDeleteUser(email) {
+  await instance.post(`/moderation/delete`, { email }).catch(defaultApiExceptionHandler)
+}
+
+export async function apiUploadProfilePhoto(formData) {
+  const response = await fetch('/api/users/profile/photo', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    },
+    body: formData
+  })
+
+  if (!response.ok) {
+    throw new Error('Не удалось загрузить фото профиля')
+  }
+
+  return await response.json()
+}
+
 export async function apiLogin(loginDto) {
   const response = await noAuthInstance
     .post('/auth/login', loginDto.toRepresentation())
