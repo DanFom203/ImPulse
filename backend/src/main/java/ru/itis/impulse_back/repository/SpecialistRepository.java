@@ -116,4 +116,9 @@ public class SpecialistRepository {
         return template;
 
     }
+
+    public void saveCustomSpecialty(String name, boolean isCustom) {
+        String sql = "insert into speciality (name, is_custom) values (?, ?) on conflict (name) do nothing;";
+        jdbcTemplate.update(sql, name, isCustom);
+    }
 }

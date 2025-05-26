@@ -26,8 +26,6 @@ function onDeleteUser(email) {
   }
 }
 
-console.log('Текущий email модератора:', moderatorStore.currentModeratorEmail)
-
 onMounted(() => {
   moderatorStore.fetchAllUsers()
 })
@@ -94,7 +92,10 @@ onMounted(() => {
             <p v-else class="self-authority-warning">
               Нельзя изменить собственный уровень доступа!
             </p>
-            <button class="delete-btn" @click="onDeleteUser(user.email)">
+            <button
+                class="delete-btn"
+                @click="onDeleteUser(user.email)"
+            >
               Удалить профиль
             </button>
           </div>

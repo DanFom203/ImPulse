@@ -4,21 +4,34 @@
 
     <DefaultLoader v-if="specialtyStoreRequestData.loading" />
     <div class="specialties" v-else>
-      <div class="specialty" v-for="specialty in allSpecialties" v-bind:key="specialty.id">
-        <label :for="`specialty-${specialty.id}`">{{ specialty.name }}</label>
-        <input
-          type="checkbox"
-          name="specialties"
-          :id="`specialty-${specialty.id}`"
-          :value="specialty"
-          v-model="form.specialties"
-        />
+      <div class="scrollable-specialties">
+        <div class="specialty" v-for="specialty in allSpecialties" :key="specialty.id">
+          <label :for="`specialty-${specialty.id}`">{{ specialty.name }}</label>
+          <input
+              type="checkbox"
+              :id="`specialty-${specialty.id}`"
+              :value="specialty.id"
+              v-model="selectedSpecialtyIds"
+          />
+        </div>
       </div>
     </div>
 
     <DefaultLoader v-if="userStoreRequestData.loading" />
     <FormSubmit value="Update specialties" v-else />
+
   </form>
+
+  <div class="custom-specialty">
+    <label for="newSpecialty">Добавить другую специализацию:</label>
+    <input
+        id="newSpecialty"
+        type="text"
+        v-model="newSpecialty"
+        placeholder="Введите специализацию"
+    />
+    <button type="button" @click="addCustomSpecialty">Добавить</button>
+  </div>
 </template>
 
 <script>
@@ -27,6 +40,7 @@ import { useUserStore } from '@/stores/userStore.js'
 import { mapActions, mapState } from 'pinia'
 import FormSubmit from './FormSubmit.vue'
 import DefaultLoader from '../utils/DefaultLoader.vue'
+import {apiEditSpecialtiesList} from "@/services/api.js";
 
 export default {
   name: 'UpdateSpecialtiesForm',
@@ -34,8 +48,10 @@ export default {
   data() {
     return {
       form: {
-        specialties: useUserStore().user.specialties
-      }
+        specialties: useUserStore().user.specialties || []
+      },
+      selectedSpecialtyIds: useUserStore().user.specialties?.map(s => s.id) || [],
+      newSpecialty: ''
     }
   },
   computed: {
@@ -55,7 +71,42 @@ export default {
     ...mapActions(useSpecialtyStore, ['ensureLoaded']),
     ...mapActions(useUserStore, ['updateSpecialties']),
     async submit() {
-      await this.updateSpecialties(this.form.specialties)
+      const selected = this.allSpecialties.filter(s => this.selectedSpecialtyIds.includes(s.id))
+
+      const allSelected = [
+        ...selected,
+        ...(this.form.specialties.filter(s => s.isCustom) || [])
+      ]
+
+      await this.updateSpecialties(allSelected)
+    },
+    async addCustomSpecialty() {
+      const trimmed = this.newSpecialty.trim()
+      if (!trimmed) return
+
+      const exists = (this.form.specialties || []).some(
+          s => s.name.toLowerCase() === trimmed.toLowerCase()
+      )
+      if (exists) return
+
+      try {
+        await apiEditSpecialtiesList(trimmed)
+
+        const custom = {
+          name: trimmed,
+          isCustom: true
+        }
+
+        if (!this.form.specialties) {
+          this.form.specialties = []
+        }
+
+        this.form.specialties.push(custom)
+        this.selectedSpecialtyIds.push(undefined)
+        this.newSpecialty = ''
+      } catch (e) {
+        console.error('Ошибка при добавлении специализации:', e)
+      }
     }
   }
 }
@@ -64,5 +115,13 @@ export default {
 <style scoped>
 .form {
   border: 1px solid black;
+}
+
+.scrollable-specialties {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin-bottom: 16px;
 }
 </style>

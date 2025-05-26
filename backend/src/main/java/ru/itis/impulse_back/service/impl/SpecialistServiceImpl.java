@@ -58,4 +58,9 @@ public class SpecialistServiceImpl implements SpecialistService {
 
         userRepository.save(specialist);
     }
+
+    @Override
+    public void addSpecialty(String newSpecialty, boolean isCustom) {
+        specialistRepository.saveCustomSpecialty(newSpecialty, isCustom);
+    }
 }

@@ -32,20 +32,6 @@ class LoginDto {
   }
 }
 
-class AuthorityModerationDto {
-  constructor(email, authority) {
-    this.email = email
-    this.authority = authority
-  }
-
-  toRepresentation() {
-    return {
-      email: this.email,
-      authority: this.authority
-    }
-  }
-}
-
 class SearchFilterDto {
   constructor() {
     this.searchString = ''

@@ -9,6 +9,7 @@ import ru.itis.impulse_back.exception.UserNotFoundException;
 import ru.itis.impulse_back.model.User;
 import ru.itis.impulse_back.repository.UserRepository;
 import ru.itis.impulse_back.service.UserService;
+
 import java.util.Optional;
 
 @Service
@@ -41,6 +42,7 @@ public class UserServiceImpl implements UserService {
                 .fullName(user.getFullName())
                 .createdAt(user.getCreatedAt())
                 .role(user.getRole())
+                .authority(user.getAuthority())
                 .specialistBio(user.getSpecialistBio())
                 .specialistAppointmentPrice(user.getSpecialistAppointmentPrice())
                 .specialistAvgRating(user.getSpecialistAvgRating())
@@ -54,4 +56,5 @@ public class UserServiceImpl implements UserService {
     public void deleteAccount(Long userId) {
         userRepository.delete(userRepository.findById(userId).get());
     }
+
 }

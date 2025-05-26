@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { API_URL } from './consts.js'
-import { useUserStore } from '../stores/userStore.js'
-import { User } from '@/models/base.js'
+import {API_URL} from './consts.js'
+import {useUserStore} from '../stores/userStore.js'
+import {User} from '@/models/base.js'
 
 const instance = axios.create({
   baseURL: API_URL
@@ -27,8 +27,7 @@ instance.interceptors.request.use(
 export async function apiGetAllUsers() {
   const response = await instance.get('/moderation/accounts').catch(defaultApiExceptionHandler)
 
-  const accountsList = response.data
-  return accountsList
+  return response.data
 }
 
 export async function apiUpdateUserAuthority(email, authority) {
@@ -78,8 +77,7 @@ export async function apiRegister(registrationDto) {
 export async function apiFetchSpecialtyList() {
   const response = await instance.get('/specialty').catch(defaultApiExceptionHandler)
 
-  const specialtyList = response.data
-  return specialtyList
+  return response.data
 }
 
 export async function apiFetchSpecialists(searchFilterDto) {
@@ -125,7 +123,11 @@ export async function apiDeleteProfile() {
 }
 
 export async function apiUpdateSpecialties(specialties) {
-  await instance.post('/profile/edit/specialty', specialties).catch(defaultApiExceptionHandler)
+  await instance.post('/profile/update/specialty', specialties).catch(defaultApiExceptionHandler)
+}
+
+export async function apiEditSpecialtiesList(specialty) {
+  return instance.post('/profile/edit/specialty', { newSpecialty: specialty})
 }
 
 function defaultApiExceptionHandler(error) {

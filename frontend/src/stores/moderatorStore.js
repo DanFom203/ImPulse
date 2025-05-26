@@ -24,19 +24,23 @@ export const useModeratorStore = defineStore('moderatorStore', {
             }
             this.requestData.stopLoading()
         },
-        async updateUserAuthority(userId, newAuthority) {
+        async updateUserAuthority(email, newAuthority) {
             try {
-                await apiUpdateUserAuthority(userId, newAuthority)
-                const user = this.users.find(u => u.id === userId)
-                if (user) user.authority = newAuthority
+                await apiUpdateUserAuthority(email, newAuthority)
+
+                const user = this.users.find(u => u.email === email)
+                if (user) {
+                    user.authority = newAuthority
+                }
             } catch (error) {
                 alert('Ошибка при обновлении статуса: ' + error.message)
             }
         },
-        async deleteUser(userId) {
+        async deleteUser(email) {
             try {
-                await apiDeleteUser(userId)
-                this.users = this.users.filter(u => u.id !== userId)
+                await apiDeleteUser(email)
+
+                this.users = this.users.filter(u => u.email !== email)
             } catch (error) {
                 alert('Ошибка при удалении пользователя: ' + error.message)
             }
