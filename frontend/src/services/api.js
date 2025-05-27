@@ -75,7 +75,7 @@ export async function apiRegister(registrationDto) {
 }
 
 export async function apiFetchSpecialtyList() {
-  const response = await instance.get('/specialty').catch(defaultApiExceptionHandler)
+  const response = await instance.get('/specialty/list').catch(defaultApiExceptionHandler)
 
   return response.data
 }
@@ -119,7 +119,7 @@ export async function apiCreateReview(specialistId, createReviewDto) {
 }
 
 export async function apiDeleteProfile() {
-  await instance.post('/profile/edit/delete').catch(defaultApiExceptionHandler)
+  await instance.post('/profile/delete').catch(defaultApiExceptionHandler)
 }
 
 export async function apiUpdateSpecialties(specialties) {
@@ -127,7 +127,11 @@ export async function apiUpdateSpecialties(specialties) {
 }
 
 export async function apiEditSpecialtiesList(specialty) {
-  return instance.post('/profile/edit/specialty', { newSpecialty: specialty})
+  const response = await instance.post('/specialty/edit', {
+    newSpecialty: specialty
+  })
+
+  return response.data
 }
 
 function defaultApiExceptionHandler(error) {

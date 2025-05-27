@@ -40,7 +40,7 @@ public class SpecialistServiceImpl implements SpecialistService {
     }
 
     @Override
-    public void editSpecialties(List<Long> specialties, Long specialistId) {
+    public void updateSpecialties(List<Long> specialties, Long specialistId) {
         List<Specialty> newSpecialties = new ArrayList<>();
 
         for (Long specialtyId : specialties) {
@@ -60,7 +60,7 @@ public class SpecialistServiceImpl implements SpecialistService {
     }
 
     @Override
-    public void addSpecialty(String newSpecialty, boolean isCustom) {
-        specialistRepository.saveCustomSpecialty(newSpecialty, isCustom);
+    public void updateSpecialistInfo(Long specialistId, String specialistBio, Integer specialistAppointmentPrice) {
+        //Todo
     }
 }

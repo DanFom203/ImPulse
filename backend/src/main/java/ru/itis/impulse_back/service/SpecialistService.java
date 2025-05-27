@@ -8,7 +8,6 @@ import java.util.List;
 public interface SpecialistService {
     List<User> getAllByFilter(SearchSpecialistRequest request);
     User getById(Long id);
-    void editSpecialties(List<Long> specialties, Long specialistId);
-
-    void addSpecialty(String newSpecialty, boolean isCustom);
+    void updateSpecialties(List<Long> specialties, Long specialistId);
+    void updateSpecialistInfo(Long specialistId, String specialistBio, Integer specialistAppointmentPrice);
 }

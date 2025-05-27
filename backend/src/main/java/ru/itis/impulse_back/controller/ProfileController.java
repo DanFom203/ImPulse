@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.itis.impulse_back.dto.request.EditSpecialtiesRequest;
+import ru.itis.impulse_back.dto.request.UpdateSpecialistInfoRequest;
+import ru.itis.impulse_back.dto.response.UserDetailsResponse;
 import ru.itis.impulse_back.security.service.JWTService;
 import ru.itis.impulse_back.service.SpecialistService;
 import ru.itis.impulse_back.service.UserService;
@@ -20,21 +21,30 @@ public class ProfileController {
     private final UserService userService;
 
     @PostMapping("/update/specialty")
-    public ResponseEntity<Void> updateSpecialties(@RequestBody List<Long> specialties, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        specialistService.editSpecialties(specialties, jwtService.getClaims(token.substring(7)).get("id").asLong());
+    public ResponseEntity<Void> updateSpecialties(
+            @RequestBody List<Long> specialties,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token
+    ) {
+        specialistService.updateSpecialties(specialties, jwtService.getClaims(token.substring(7)).get("id").asLong());
 
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/edit/specialty")
-    public ResponseEntity<Void> editSpecialties(@RequestBody EditSpecialtiesRequest request) {
-        specialistService.addSpecialty(request.getNewSpecialty(), true);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/edit/delete")
+    @PostMapping("/delete")
     public ResponseEntity<Void> deleteAccount(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         userService.deleteAccount(jwtService.getClaims(token.substring(7)).get("id").asLong());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/edit/info")
+    public ResponseEntity<UserDetailsResponse> editProfileInfo(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @RequestBody UpdateSpecialistInfoRequest request
+    ) {
+        specialistService.updateSpecialistInfo(
+                jwtService.getClaims(token.substring(7)).get("id").asLong(),
+                request.getSpecialistBio(),
+                request.getSpecialistPrice());
         return ResponseEntity.ok().build();
     }
 }

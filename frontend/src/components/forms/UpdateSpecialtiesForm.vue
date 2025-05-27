@@ -90,19 +90,21 @@ export default {
       if (exists) return
 
       try {
-        await apiEditSpecialtiesList(trimmed)
+        const updatedSpecialties = await apiEditSpecialtiesList(trimmed)
 
-        const custom = {
-          name: trimmed,
-          isCustom: true
+        const specialtyStore = useSpecialtyStore()
+        specialtyStore.specialtyList = updatedSpecialties
+
+        const justAdded = updatedSpecialties.find(
+            s => s.name.toLowerCase() === trimmed.toLowerCase()
+        )
+
+        if (justAdded) {
+          if (!this.selectedSpecialtyIds.includes(justAdded.id)) {
+            this.selectedSpecialtyIds.push(justAdded.id)
+          }
         }
 
-        if (!this.form.specialties) {
-          this.form.specialties = []
-        }
-
-        this.form.specialties.push(custom)
-        this.selectedSpecialtyIds.push(undefined)
         this.newSpecialty = ''
       } catch (e) {
         console.error('Ошибка при добавлении специализации:', e)
