@@ -1,24 +1,28 @@
 <template>
-  <div class="review">
-    <div class="by">By: {{ review.client.fullName }}</div>
+  <div class="review-card">
+    <div class="review-header">
+      <span class="label">От: <span class="client-name">{{ review.client?.fullName ?? 'Аноним' }}</span></span>
+    </div>
 
-    <div class="for" v-if="review.specialist !== undefined">
-      For:
-      <RouterLink :to="{ name: 'Specialist', params: { id: review.specialist.id } }">
+    <div class="review-specialist" v-if="review.specialist">
+      <span class="label">Тренеру:</span>
+      <RouterLink class="specialist-link" :to="{ name: 'Specialist', params: { id: review.specialist.id } }">
         {{ review.specialist.fullName }}
       </RouterLink>
     </div>
 
-    <div class="rating">Rating: {{ review.rating }}</div>
-
-    <div class="comment">
-      Comment:
-      <div class="comment-body">
-        {{ review.comment }}
-      </div>
+    <div class="review-rating">
+      <span class="label">Оценка:</span> {{ review.rating }}/5
     </div>
 
-    <div class="created-at">Created at: {{ review.createdAt }}</div>
+    <div class="review-comment">
+      <span class="label">Комментарий:</span>
+      <p class="comment-body">{{ review.comment }}</p>
+    </div>
+
+    <div class="review-date">
+      <span class="label">Дата:</span> {{ formatDate(review.createdAt) }}
+    </div>
   </div>
 </template>
 
@@ -28,13 +32,14 @@ import { RouterLink } from 'vue-router'
 export default {
   name: 'ReviewBlock',
   components: { RouterLink },
-  props: ['review']
+  props: ['review'],
+  methods: {
+    formatDate(dateStr) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' }
+      return new Date(dateStr).toLocaleDateString('ru-RU', options)
+    }
+  }
 }
 </script>
 
-<style scoped>
-.review {
-  background-color: #000000;
-  border: 1px solid darkgreen;
-}
-</style>
+<style src="@/assets/reviewBlock.css"></style>

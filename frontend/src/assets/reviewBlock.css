@@ -1,0 +1,57 @@
+.review-card {
+
+    background-color: #1f1f1f;
+    border: 1px solid hsla(160, 100%, 37%, 0.4);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 255, 153, 0.1);
+    color: #e6ffe6;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 0 15px hsla(160, 100%, 37%, 0.6);
+}
+
+.label {
+    color: hsla(160, 100%, 37%, 1);
+    font-weight: bold;
+    text-shadow: 0 0 6px #00ff88;
+}
+
+.review-header,
+.review-specialist,
+.review-rating,
+.review-comment,
+.review-date {
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+}
+.client-name {
+    font-weight: 600;
+    color: #e0ffe0;
+}
+
+.comment-body {
+    margin-top: 0.5rem;
+    padding: 0.75rem 1rem;
+    background-color: #292929;
+    border-radius: 8px;
+    color: #d2ffd2;
+    text-shadow: 0 0 3px rgba(0, 255, 153, 0.2);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    border: 1px solid #00ff88;
+}
+
+.specialist-link {
+    color: #00ff88;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.specialist-link:hover {
+    text-decoration: underline;
+}
