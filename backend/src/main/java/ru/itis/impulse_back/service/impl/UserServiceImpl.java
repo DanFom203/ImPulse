@@ -1,5 +1,6 @@
 package ru.itis.impulse_back.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,7 +11,7 @@ import ru.itis.impulse_back.exception.UserAlreadyExistsException;
 import ru.itis.impulse_back.exception.UserNotFoundException;
 import ru.itis.impulse_back.mapper.UserDetailsMapper;
 import ru.itis.impulse_back.model.User;
-import ru.itis.impulse_back.repository.UserRepository;
+import ru.itis.impulse_back.repository.*;
 import ru.itis.impulse_back.service.UserService;
 
 import java.util.Optional;
@@ -20,6 +21,11 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final ChatRepository chatRepository;
+    private final MessageRepository messageRepository;
+    private final ReviewRepository reviewRepository;
+
     private final UserDetailsMapper userDetailsMapper;
 
     @Override
@@ -68,9 +74,21 @@ public class UserServiceImpl implements UserService {
         return userDetailsMapper.toResponse(user);
     }
 
+    @Transactional
     @Override
     public void deleteAccount(Long userId) {
-        userRepository.delete(userRepository.findById(userId).get());
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        user.getSpecialties().clear();
+        userRepository.save(user);
+
+        messageRepository.deleteAllBySenderOrReceiver(user, user);
+        appointmentRepository.deleteAllByClientOrSpecialist(user, user);
+        chatRepository.deleteAllByFirstParticipantOrSecondParticipant(user, user);
+        reviewRepository.deleteAllByClientOrSpecialist(user, user);
+
+        userRepository.delete(user);
     }
 
 }
