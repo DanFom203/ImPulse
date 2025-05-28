@@ -100,17 +100,18 @@ export const useUserStore = defineStore('userStore', {
 
       this.requestData.stopLoading()
     },
-    async uploadProfilePhoto(formData) {
+    async uploadProfilePhoto(url) {
       this.requestData.startLoading()
 
       try {
-        const updatedUser = await apiUploadProfilePhoto(formData)
+        const updatedUser = await apiUploadProfilePhoto(url)
         this.setUser(updatedUser)
       } catch (error) {
+        console.error('Ошибка при обновлении фото профиля:', error.response || error)
         this.setError(error)
+      } finally {
+        this.requestData.stopLoading()
       }
-
-      this.requestData.stopLoading()
     }
   },
   getters: {

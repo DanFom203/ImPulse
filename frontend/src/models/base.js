@@ -1,7 +1,8 @@
 class User {
-  constructor(email, fullName, role, authority, bio, reviews, rating, price, specialties, createdAt) {
+  constructor(email, fullName, avatar, role, authority, bio, reviews, rating, price, specialties, createdAt) {
     this.email = email
     this.fullName = fullName
+    this.avatar = avatar
     this.role = role
     this.authority = authority
     this.bio = bio
@@ -16,6 +17,7 @@ class User {
     return new User(
         map['email'],
         map['fullName'],
+        map['avatar'],
         map['role'],
         map['authority'],
         map['bio'],

@@ -38,20 +38,13 @@ export async function apiDeleteUser(email) {
   await instance.post(`/moderation/delete`, { email }).catch(defaultApiExceptionHandler)
 }
 
-export async function apiUploadProfilePhoto(formData) {
-  const response = await fetch('/api/users/profile/photo', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`
-    },
-    body: formData
-  })
+export async function apiUploadProfilePhoto(url) {
+  const response = await instance.post(
+      '/profile/update/avatar',
+      { avatar: url } )
+      .catch(defaultApiExceptionHandler)
 
-  if (!response.ok) {
-    throw new Error('Не удалось загрузить фото профиля')
-  }
-
-  return await response.json()
+  return response.data
 }
 
 export async function apiLogin(loginDto) {
@@ -135,7 +128,7 @@ export async function apiEditSpecialtiesList(specialty) {
 }
 
 export async function apiEditProfileInfo(bio, price) {
-  const response = await instance.post('/profile/edit/info', {
+  const response = await instance.post('/profile/update/info', {
     specialistBio: bio,
     specialistPrice: price
   })
