@@ -2,6 +2,7 @@ package ru.itis.impulse_back.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import ru.itis.impulse_back.model.Review;
 import ru.itis.impulse_back.model.Specialty;
 
 import java.util.Date;
@@ -29,6 +30,9 @@ public class UserDetailsResponse {
 
     @JsonProperty("bio")
     private String specialistBio;
+
+    @JsonProperty("reviews")
+    private List<Review> specialistReviews;
 
     @JsonProperty("rating")
     private Double specialistRating;

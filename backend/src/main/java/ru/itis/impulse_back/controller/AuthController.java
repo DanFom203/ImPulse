@@ -20,6 +20,7 @@ import ru.itis.impulse_back.service.UserService;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.List;
 import java.util.Locale;
 
 @RestController
@@ -83,14 +84,16 @@ public class AuthController {
         if (user.getRole().equals(User.UserRole.SPECIALIST)) {
             userDetailsResponse.setSpecialistBio(user.getSpecialistBio());
 
-            if (user.getSpecialistReviews() != null && !user.getSpecialistReviews().isEmpty()) {
-                Double rating =  (double) user.getSpecialistReviews().stream()
+            List<Review> reviews = user.getSpecialistReviews();
+            if (reviews!= null && !reviews.isEmpty()) {
+                Double rating =  (double) reviews.stream()
                         .map(Review::getRating)
-                        .reduce(0, Integer::sum) / user.getSpecialistReviews().size();
+                        .reduce(0, Integer::sum) / reviews.size();
 
                 DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
                 DecimalFormat df = new DecimalFormat("0.00", symbols);
                 userDetailsResponse.setSpecialistRating(Double.parseDouble(df.format(rating)));
+                userDetailsResponse.setSpecialistReviews(reviews);
             }
 
             userDetailsResponse.setSpecialistRating(user.getSpecialistAvgRating());

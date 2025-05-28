@@ -134,6 +134,15 @@ export async function apiEditSpecialtiesList(specialty) {
   return response.data
 }
 
+export async function apiEditProfileInfo(bio, price) {
+  const response = await instance.post('/profile/edit/info', {
+    specialistBio: bio,
+    specialistPrice: price
+  })
+
+  return response.data
+}
+
 function defaultApiExceptionHandler(error) {
   if (error.response) {
     console.error(error.response)

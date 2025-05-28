@@ -41,10 +41,10 @@ public class ProfileController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @RequestBody UpdateSpecialistInfoRequest request
     ) {
-        specialistService.updateSpecialistInfo(
+        UserDetailsResponse specialistResponse = specialistService.updateSpecialistInfo(
                 jwtService.getClaims(token.substring(7)).get("id").asLong(),
                 request.getSpecialistBio(),
                 request.getSpecialistPrice());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(specialistResponse);
     }
 }

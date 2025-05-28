@@ -1,5 +1,12 @@
 import { defineStore } from 'pinia'
-import { apiLogin, apiRegister, apiDeleteProfile, apiUpdateSpecialties, apiUploadProfilePhoto } from '../services/api.js'
+import {
+  apiLogin,
+  apiRegister,
+  apiDeleteProfile,
+  apiUpdateSpecialties,
+  apiUploadProfilePhoto,
+  apiEditProfileInfo
+} from '../services/api.js'
 import {
   clearTokenInStorage,
   clearUserInStorage,
@@ -72,6 +79,20 @@ export const useUserStore = defineStore('userStore', {
       try {
         await apiUpdateSpecialties(specialties.map((specialty) => specialty.id))
         this.user.specialties = specialties
+        this.setUser(this.user)
+      } catch (error) {
+        this.setError(error)
+      }
+
+      this.requestData.stopLoading()
+    },
+    async updateProfileInfo(bio, price) {
+      this.requestData.startLoading()
+
+      try {
+        await apiEditProfileInfo(bio, price)
+        this.user.specialistBio = bio
+        this.user.specialistPrice = price
         this.setUser(this.user)
       } catch (error) {
         this.setError(error)
