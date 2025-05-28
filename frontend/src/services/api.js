@@ -39,19 +39,12 @@ export async function apiDeleteUser(email) {
 }
 
 export async function apiUploadProfilePhoto(formData) {
-  const response = await fetch('/api/users/profile/photo', {
-    method: 'POST',
+  const response = await instance.post('/profile/update/avatar', formData, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`
-    },
-    body: formData
+      'Content-Type': 'multipart/form-data'
+    }
   })
-
-  if (!response.ok) {
-    throw new Error('Не удалось загрузить фото профиля')
-  }
-
-  return await response.json()
+  return response.data
 }
 
 export async function apiLogin(loginDto) {
@@ -135,7 +128,7 @@ export async function apiEditSpecialtiesList(specialty) {
 }
 
 export async function apiEditProfileInfo(bio, price) {
-  const response = await instance.post('/profile/edit/info', {
+  const response = await instance.post('/profile/update/info', {
     specialistBio: bio,
     specialistPrice: price
   })

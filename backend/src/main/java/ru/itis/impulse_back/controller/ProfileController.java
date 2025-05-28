@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.itis.impulse_back.dto.request.UpdateSpecialistInfoRequest;
+import ru.itis.impulse_back.dto.request.UpdateUserPhotoRequest;
 import ru.itis.impulse_back.dto.response.UserDetailsResponse;
 import ru.itis.impulse_back.security.service.JWTService;
 import ru.itis.impulse_back.service.SpecialistService;
@@ -36,7 +38,7 @@ public class ProfileController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/edit/info")
+    @PostMapping("/update/info")
     public ResponseEntity<UserDetailsResponse> editProfileInfo(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @RequestBody UpdateSpecialistInfoRequest request
@@ -47,4 +49,15 @@ public class ProfileController {
                 request.getSpecialistPrice());
         return ResponseEntity.ok().body(specialistResponse);
     }
+
+    @PostMapping("/update/avatar")
+    public ResponseEntity<UserDetailsResponse> updateProfilePhoto(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @RequestParam("file") MultipartFile file
+    ) {
+        Long userId = jwtService.getClaims(token.substring(7)).get("id").asLong();
+        UserDetailsResponse response = userService.updateUserProfilePhoto(userId, file);
+        return ResponseEntity.ok(response);
+    }
+
 }
