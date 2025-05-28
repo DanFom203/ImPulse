@@ -1,14 +1,22 @@
 :root {
     --profile-scale: 3;
     --base-font-size: 16px;
-    --profile-bg-light: #ffffff;
-    --profile-bg-dark: #1e1e1e;
-    --profile-custom-bg: var(--profile-bg-light); /* дефолтный фон */
+
+    --neon-green: #00ff99;
+    --dark-bg: #0d0d0d;
+    --card-bg: #121212;
+    --border-color: #00cc77;
+    --text-primary: #e0ffe9;
+    --text-secondary: #88ffcc;
+
+    --profile-custom-bg: var(--card-bg);
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
     :root {
-        --profile-custom-bg: var(--profile-bg-dark);
+        --profile-custom-bg: #ffffff;
+        --text-primary: #002a1c;
+        --text-secondary: #006644;
     }
 }
 
@@ -19,6 +27,7 @@
     align-items: flex-start;
     flex-wrap: wrap;
     padding: 24px;
+    background-color: var(--dark-bg);
 }
 
 .profile {
@@ -26,7 +35,9 @@
     background-color: var(--profile-custom-bg);
     padding: 20px;
     border-radius: 16px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 16px var(--neon-green);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
 }
 
 .profile-header {
@@ -40,7 +51,8 @@
     height: calc(80px * var(--profile-scale));
     border-radius: 50%;
     object-fit: cover;
-    border: calc(3px * var(--profile-scale)) solid #ccc;
+    border: calc(3px * var(--profile-scale)) solid var(--neon-green);
+    box-shadow: 0 0 8px var(--neon-green);
 }
 
 .profile-photo-wrapper {
@@ -65,21 +77,25 @@
 .specialist-section p,
 .specialist-section ul {
     margin: calc(10px * var(--profile-scale)) 0;
+    color: var(--text-primary);
 }
 
 .admin-badge {
     font-weight: bold;
-    color: crimson;
+    color: var(--neon-green);
+    text-shadow: 0 0 6px var(--neon-green);
 }
 
 details {
     margin-top: calc(16px * var(--profile-scale));
     cursor: pointer;
+    color: var(--text-secondary);
 }
 
 summary {
     font-weight: bold;
     margin-bottom: calc(8px * var(--profile-scale));
+    color: var(--text-secondary);
 }
 
 .review-list {
@@ -89,12 +105,13 @@ summary {
 }
 
 .review-card {
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 16px;
-    background-color: #f9f9f9;
+    background-color: var(--card-bg);
     transition: background-color 0.3s, border-color 0.3s;
+    box-shadow: 0 0 8px rgba(0, 255, 153, 0.2);
 }
 
 .review-header {
@@ -107,40 +124,25 @@ summary {
 .review-client {
     font-weight: bold;
     font-size: 1rem;
+    color: var(--text-primary);
 }
 
 .review-rating {
-    background-color: #ffd700;
+    background-color: var(--neon-green);
     padding: 2px 8px;
     border-radius: 6px;
     font-size: 0.95rem;
     color: #000;
+    box-shadow: 0 0 6px var(--neon-green);
 }
 
 .review-comment {
     margin: 10px 0;
     line-height: 1.4;
+    color: var(--text-primary);
 }
 
 .review-date {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 0.85rem;
 }
-
-/* 🌙 Темная тема */
-@media (prefers-color-scheme: dark) {
-    .review-card {
-        background-color: #2a2a2a;
-        border-color: #444;
-    }
-
-    .review-rating {
-        background-color: #bfa500;
-        color: #fff;
-    }
-
-    .review-date {
-        color: #aaa;
-    }
-}
-

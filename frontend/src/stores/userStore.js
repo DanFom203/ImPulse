@@ -91,8 +91,8 @@ export const useUserStore = defineStore('userStore', {
 
       try {
         await apiEditProfileInfo(bio, price)
-        this.user.specialistBio = bio
-        this.user.specialistPrice = price
+        this.user.bio = bio
+        this.user.price = price
         this.setUser(this.user)
       } catch (error) {
         this.setError(error)

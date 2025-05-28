@@ -1,0 +1,106 @@
+
+.search-form {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #1f1f1f;
+    color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 255, 153, 0.1);
+    font-size: 1rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    background-color: var(--vt-c-divider-dark-1);
+    border: 2px solid hsla(160, 100%, 37%, 1);
+    border-radius: 6px;
+    color: hsla(160, 100%, 37%, 1);
+}
+
+.card {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 1px solid hsla(160, 100%, 37%, 0.4);
+    border-radius: 10px;
+    background-color: #2a2a2a;
+}
+
+.options-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.option {
+    flex: 1;
+    min-width: 120px;
+}
+
+.filter__price-item,
+.filter__rating-item {
+    margin-top: 0.5rem;
+}
+
+.specialtyList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.specialty-item {
+    flex: 1 1 45%;
+}
+
+.submit-button {
+    background-color: var(--vt-c-green);
+    color: var(--vt-c-black);
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    display: block;
+    width: 100%;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.submit-button:hover {
+    background-color: hsla(160, 100%, 37%, 0.8);
+}
+
+.error {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    text-align: center;
+}
+.scrollable-specialties {
+    max-height: 200px; /* можно регулировать */
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-top: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+/* Неоновый кастом-скролл */
+.scrollable-specialties::-webkit-scrollbar {
+    width: 8px;
+}
+.scrollable-specialties::-webkit-scrollbar-track {
+    background: #1f1f1f;
+    border-radius: 10px;
+}
+.scrollable-specialties::-webkit-scrollbar-thumb {
+    background-color: hsla(160, 100%, 37%, 0.7);
+    border-radius: 10px;
+}
+.scrollable-specialties::-webkit-scrollbar-thumb:hover {
+    background-color: hsla(160, 100%, 47%, 1);
+}

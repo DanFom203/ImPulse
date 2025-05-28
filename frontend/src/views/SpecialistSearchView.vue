@@ -1,5 +1,4 @@
 <script setup>
-import MainLayout from '../components/blocks/MainLayout.vue'
 import SpecialistSearchForm from '../components/forms/SpecialistSearchForm.vue'
 import SpecialistList from '../components/lists/SpecialistList.vue'
 </script>
@@ -7,7 +6,7 @@ import SpecialistList from '../components/lists/SpecialistList.vue'
 <template>
   <MainLayout>
     <div class="about">
-      <h1>Search for specialist</h1>
+      <h1>Найти подходящего вам тренера!</h1>
       <SpecialistSearchForm />
       <SpecialistList />
     </div>
@@ -20,3 +19,13 @@ export default {
   components: { MainLayout }
 }
 </script>
+<style scoped>
+
+
+.about h1 {
+  align-items: center;
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+</style>

@@ -1,12 +1,14 @@
 <template>
   <div class="chat-widget">
     <div class="chat-header">
-      <h3>Chat with {{ interlocutor.fullName }}</h3>
+      <h3>Чат с {{ interlocutor.fullName }}</h3>
       <button class="close-button" @click="$emit('close')">×</button>
     </div>
     <div class="chat-messages" ref="chatContainer">
       <p v-for="(msg, index) in messages" :key="index">
-        <strong>{{ msg.senderId === currentUserId ? 'You' : interlocutor.fullName }}</strong>: {{ msg.body }}
+        <strong>
+          {{ msg.senderId === currentUserId ? 'Вы' : interlocutor.role || 'Ваш собеседник' }}
+        </strong>: {{ msg.body }}
       </p>
     </div>
     <div class="chat-input">
