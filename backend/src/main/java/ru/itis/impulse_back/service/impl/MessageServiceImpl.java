@@ -25,14 +25,14 @@ public class MessageServiceImpl implements MessageService {
     public MessageResponse saveMessage(SendMessageRequest request, Long senderId) {
         Chat chat = chatRepository
                 .findByFirstParticipantIdAndSecondParticipantId(senderId, request.getReceiverId())
+                .or(() -> chatRepository.findByFirstParticipantIdAndSecondParticipantId(request.getReceiverId(), senderId))
                 .orElseGet(() -> {
                     Chat newChat = Chat.builder()
-                            .firstParticipant(userRepository.findById(senderId).get())
-                            .secondParticipant(userRepository.findById(request.getReceiverId()).get())
+                            .firstParticipant(userRepository.findById(senderId).orElseThrow())
+                            .secondParticipant(userRepository.findById(request.getReceiverId()).orElseThrow())
                             .build();
                     return chatRepository.save(newChat);
                 });
-
         Message message = Message.builder()
                 .chat(chat)
                 .sender(userRepository.findById(senderId).get())

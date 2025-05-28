@@ -98,10 +98,10 @@ export default {
 }
 
 .approved {
-  background-color: lightgreen;
+  color: #00bd7e;
 }
 
 .not-approved {
-  background-color: yellow;
+  color: yellow;
 }
 </style>

@@ -11,11 +11,14 @@ import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import ru.itis.impulse_back.security.service.JWTService;
+
 import java.util.List;
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class ChatConfig implements WebSocketMessageBrokerConfigurer {
+
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(new AuthChannelInterceptor());
@@ -23,14 +26,14 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/queue/");
-        registry.setApplicationDestinationPrefixes("/app","/user");
-
+        registry.enableSimpleBroker( "/user");
+        registry.setApplicationDestinationPrefixes("/app");
+        registry.setUserDestinationPrefix("/user");
     }
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("http://localhost:5173");
+                .setAllowedOrigins("*");
     }
 
     @Override

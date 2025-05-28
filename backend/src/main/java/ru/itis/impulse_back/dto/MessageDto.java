@@ -14,6 +14,8 @@ public class MessageDto {
     private Date createdAt;
     private ShortUserDto sender;
     private ShortUserDto receiver;
+    private Long senderId;
+    private Long receiverId;
 
     public static MessageDto from(Message message) {
         return MessageDto.builder()
@@ -22,6 +24,8 @@ public class MessageDto {
                 .createdAt(message.getCreatedAt())
                 .sender(ShortUserDto.from(message.getSender()))
                 .receiver(ShortUserDto.from(message.getReceiver()))
+                .senderId(message.getSender().getId())
+                .receiverId(message.getReceiver().getId())
                 .build();
     }
 }

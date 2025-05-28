@@ -34,7 +34,7 @@ export default {
 
 <style scoped>
 .review {
-  background-color: aquamarine;
+  background-color: #000000;
   border: 1px solid darkgreen;
 }
 </style>
