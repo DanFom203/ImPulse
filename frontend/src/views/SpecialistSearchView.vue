@@ -14,6 +14,8 @@ import SpecialistList from '../components/lists/SpecialistList.vue'
 </template>
 
 <script>
+import MainLayout from "@/components/blocks/MainLayout.vue";
+
 export default {
   name: 'SpecialistSearchView',
   components: { MainLayout }
