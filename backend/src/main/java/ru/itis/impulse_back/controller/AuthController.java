@@ -19,6 +19,9 @@ import ru.itis.impulse_back.service.AuthService;
 import ru.itis.impulse_back.service.UserService;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("${api.uri}/auth")
@@ -34,6 +37,7 @@ public class AuthController {
                 .email(registerRequest.getEmail())
                 .fullName(registerRequest.getFullName())
                 .role(registerRequest.getRole())
+                .authority(String.valueOf(User.UserAuthority.DEFAULT))
                 .build();
 
         UserDto user = userService.getByEmail(registerRequest.getEmail());
@@ -72,17 +76,24 @@ public class AuthController {
                 .email(loginRequest.getEmail())
                 .fullName(user.getFullName())
                 .role(String.valueOf(user.getRole()))
+                .authority(String.valueOf(user.getAuthority()))
+                .createdAt(user.getCreatedAt())
+                .profileImageUrl(user.getProfileImageUrl())
                 .build();
 
         if (user.getRole().equals(User.UserRole.SPECIALIST)) {
             userDetailsResponse.setSpecialistBio(user.getSpecialistBio());
 
-            if (user.getSpecialistReviews() != null && !user.getSpecialistReviews().isEmpty()) {
-                Double rating =  (double) user.getSpecialistReviews().stream()
+            List<Review> reviews = user.getSpecialistReviews();
+            if (reviews!= null && !reviews.isEmpty()) {
+                Double rating =  (double) reviews.stream()
                         .map(Review::getRating)
-                        .reduce(0, Integer::sum) / user.getSpecialistReviews().size();
+                        .reduce(0, Integer::sum) / reviews.size();
 
-                userDetailsResponse.setSpecialistRating(Double.parseDouble(new DecimalFormat("0.00").format(rating)));
+                DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+                DecimalFormat df = new DecimalFormat("0.00", symbols);
+                userDetailsResponse.setSpecialistRating(Double.parseDouble(df.format(rating)));
+                userDetailsResponse.setSpecialistReviews(reviews);
             }
 
             userDetailsResponse.setSpecialistRating(user.getSpecialistAvgRating());

@@ -83,7 +83,7 @@ button:hover {
 }
 
 .form-error {
-    min-height: 20px; /* или больше, если ошибки длинные */
+    min-height: 20px;
     color: #ff6b6b;
     font-size: 0.9rem;
     text-align: left;

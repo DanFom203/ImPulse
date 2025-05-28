@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { API_URL } from './consts.js'
-import { useUserStore } from '../stores/userStore.js'
-import { User } from '@/models/base.js'
+import {API_URL} from './consts.js'
+import {useUserStore} from '../stores/userStore.js'
+import {User} from '@/models/base.js'
 
 const instance = axios.create({
   baseURL: API_URL
@@ -24,6 +24,36 @@ instance.interceptors.request.use(
   }
 )
 
+export async function apiGetAllUsers() {
+  const response = await instance.get('/moderation/accounts').catch(defaultApiExceptionHandler)
+
+  return response.data
+}
+
+export async function apiUpdateUserAuthority(email, authority) {
+  await instance.post(`/moderation/authority`, { email, authority }).catch(defaultApiExceptionHandler)
+}
+
+export async function apiDeleteUser(email) {
+  await instance.post(`/moderation/delete`, { email }).catch(defaultApiExceptionHandler)
+}
+
+export async function apiUploadProfilePhoto(formData) {
+  const response = await fetch('/api/users/profile/photo', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    },
+    body: formData
+  })
+
+  if (!response.ok) {
+    throw new Error('Не удалось загрузить фото профиля')
+  }
+
+  return await response.json()
+}
+
 export async function apiLogin(loginDto) {
   const response = await noAuthInstance
     .post('/auth/login', loginDto.toRepresentation())
@@ -45,10 +75,9 @@ export async function apiRegister(registrationDto) {
 }
 
 export async function apiFetchSpecialtyList() {
-  const response = await instance.get('/specialty').catch(defaultApiExceptionHandler)
+  const response = await instance.get('/specialty/list').catch(defaultApiExceptionHandler)
 
-  const specialtyList = response.data
-  return specialtyList
+  return response.data
 }
 
 export async function apiFetchSpecialists(searchFilterDto) {
@@ -90,11 +119,28 @@ export async function apiCreateReview(specialistId, createReviewDto) {
 }
 
 export async function apiDeleteProfile() {
-  await instance.post('/profile/edit/delete').catch(defaultApiExceptionHandler)
+  await instance.post('/profile/delete').catch(defaultApiExceptionHandler)
 }
 
 export async function apiUpdateSpecialties(specialties) {
-  await instance.post('/profile/edit/specialty', specialties).catch(defaultApiExceptionHandler)
+  await instance.post('/profile/update/specialty', specialties).catch(defaultApiExceptionHandler)
+}
+
+export async function apiEditSpecialtiesList(specialty) {
+  const response = await instance.post('/specialty/edit', {
+    newSpecialty: specialty
+  })
+
+  return response.data
+}
+
+export async function apiEditProfileInfo(bio, price) {
+  const response = await instance.post('/profile/edit/info', {
+    specialistBio: bio,
+    specialistPrice: price
+  })
+
+  return response.data
 }
 
 function defaultApiExceptionHandler(error) {

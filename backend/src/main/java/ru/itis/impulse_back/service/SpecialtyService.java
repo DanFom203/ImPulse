@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface SpecialtyService {
     List<Specialty> getAll();
+    void addSpecialty(String newSpecialty, boolean isCustom);
 }

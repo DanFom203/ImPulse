@@ -45,6 +45,9 @@ public class User {
     @Column(name = "specialist_avg_rating")
     private Double specialistAvgRating;
 
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Review> clientReviews;

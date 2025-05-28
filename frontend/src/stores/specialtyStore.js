@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia'
-import { RequestData } from '@/models/util.js'
-import { apiFetchSpecialtyList } from '@/services/api'
+import {defineStore} from 'pinia'
+import {RequestData} from '@/models/util.js'
+import {apiFetchSpecialtyList} from '@/services/api'
 
 export const useSpecialtyStore = defineStore('specialtyStore', {
   state: () => ({
@@ -17,8 +17,7 @@ export const useSpecialtyStore = defineStore('specialtyStore', {
       this.requestData.startLoading()
 
       try {
-        const specialtyList = await apiFetchSpecialtyList()
-        this.specialtyList = specialtyList
+        this.specialtyList = await apiFetchSpecialtyList()
       } catch (error) {
         this.requestData.setError(error)
       }

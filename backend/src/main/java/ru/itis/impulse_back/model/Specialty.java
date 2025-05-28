@@ -18,5 +18,9 @@ public class Specialty {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String name;
+
+    @Column(name = "is_custom", columnDefinition = "boolean default false")
+    private boolean isCustom;
 }

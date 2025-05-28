@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import {computed, reactive, toRefs} from 'vue'
+import {computed, reactive} from 'vue'
 import useVuelidate from '@vuelidate/core'
 import {
   email,
@@ -107,8 +107,8 @@ import BaseAuthForm from './BaseAuthForm.vue'
 import FormField from './FormField.vue'
 import FormSubmit from './FormSubmit.vue'
 import {mapActions, mapState} from 'pinia'
-import {useUserStore} from '../../stores/userStore.js'
-import {RegistrationDto} from '../../models/dto.js'
+import {useUserStore} from '@/stores/userStore.js'
+import {RegistrationDto} from '@/models/dto.js'
 
 export default {
   name: 'RegistrationForm',
