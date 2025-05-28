@@ -38,12 +38,12 @@ export async function apiDeleteUser(email) {
   await instance.post(`/moderation/delete`, { email }).catch(defaultApiExceptionHandler)
 }
 
-export async function apiUploadProfilePhoto(formData) {
-  const response = await instance.post('/profile/update/avatar', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  })
+export async function apiUploadProfilePhoto(url) {
+  const response = await instance.post(
+      '/profile/update/avatar',
+      { avatar: url } )
+      .catch(defaultApiExceptionHandler)
+
   return response.data
 }
 

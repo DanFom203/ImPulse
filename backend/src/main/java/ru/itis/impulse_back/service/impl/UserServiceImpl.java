@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import ru.itis.impulse_back.dto.UserDto;
 import ru.itis.impulse_back.dto.response.UserDetailsResponse;
 import ru.itis.impulse_back.exception.UserAlreadyExistsException;
@@ -12,7 +11,6 @@ import ru.itis.impulse_back.exception.UserNotFoundException;
 import ru.itis.impulse_back.mapper.UserDetailsMapper;
 import ru.itis.impulse_back.model.User;
 import ru.itis.impulse_back.repository.UserRepository;
-import ru.itis.impulse_back.service.FirebaseService;
 import ru.itis.impulse_back.service.UserService;
 
 import java.util.Optional;
@@ -22,7 +20,6 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final FirebaseService firebaseService;
     private final UserDetailsMapper userDetailsMapper;
 
     @Override
@@ -50,6 +47,7 @@ public class UserServiceImpl implements UserService {
                 .createdAt(user.getCreatedAt())
                 .role(user.getRole())
                 .authority(user.getAuthority())
+                .profileImageUrl(user.getProfileImageUrl())
                 .specialistBio(user.getSpecialistBio())
                 .specialistAppointmentPrice(user.getSpecialistAppointmentPrice())
                 .specialistAvgRating(user.getSpecialistAvgRating())
@@ -60,11 +58,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetailsResponse updateUserProfilePhoto(Long userId, MultipartFile file) {
+    public UserDetailsResponse updateUserProfilePhoto(Long userId, String imageUrl) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        String imageUrl = firebaseService.uploadUserAvatar(file, userId);
 
         user.setProfileImageUrl(imageUrl);
         userRepository.save(user);
