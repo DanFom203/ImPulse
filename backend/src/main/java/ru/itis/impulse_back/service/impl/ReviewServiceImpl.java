@@ -10,8 +10,10 @@ import ru.itis.impulse_back.repository.ReviewRepository;
 import ru.itis.impulse_back.repository.UserRepository;
 import ru.itis.impulse_back.service.ReviewService;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -38,11 +40,16 @@ public class ReviewServiceImpl implements ReviewService {
         Double avgRating = specialist.getSpecialistAvgRating();
 
         if (avgRating == null) {
+
             specialist.setSpecialistAvgRating(Double.valueOf(request.getRating()));
         } else {
+
             Integer sumRating = specialist.getSpecialistReviews().stream().mapToInt(Review::getRating).sum();
             Double newRating = (double) (sumRating + request.getRating()) / (specialist.getSpecialistReviews().size() + 1);
-            specialist.setSpecialistAvgRating(Double.parseDouble(new DecimalFormat("0.00").format(newRating)));
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+            DecimalFormat df = new DecimalFormat("0.00", symbols);
+            specialist.setSpecialistAvgRating(Double.parseDouble(df.format(newRating)));
+
         }
 
         Review review = Review.builder()

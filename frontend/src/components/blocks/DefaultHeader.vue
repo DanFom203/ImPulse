@@ -24,57 +24,28 @@ export default {
   data() {
     return {
       routes: [
-        {
-          name: 'Home',
-          text: 'Главная'
-        },
-        {
-          name: 'Profile',
-          text: 'Профиль',
-          authRequired: true
-        },
-        {
-          name: 'SpecialistSearch',
-          text: 'Найти тренера',
-          authRequired: true
-        },
-        {
-          name: 'AppointmentList',
-          text: 'Мои записи',
-          authRequired: true
-        },
-        {
-          name: 'Reviews',
-          text: 'Мои отзывы',
-          authRequired: true
-        },
-        {
-          name: 'Login',
-          text: 'Вход',
-          guestRequired: true
-        },
-        {
-          name: 'Logout',
-          text: 'Выход',
-          authRequired: true
-        },
-        {
-          name: 'Registration',
-          text: 'Регистрация',
-          guestRequired: true
-        }
-      ],
-      activeRoutes: []
+        { name: 'Home', text: 'Главная' },
+        { name: 'Profile', text: 'Профиль', authRequired: true },
+        { name: 'SpecialistSearch', text: 'Найти тренера', authRequired: true },
+        { name: 'AppointmentList', text: 'Мои записи', authRequired: true },
+        { name: 'Reviews', text: 'Мои отзывы', authRequired: true },
+        { name: 'Login', text: 'Вход', guestRequired: true },
+        { name: 'Logout', text: 'Выход', authRequired: true },
+        { name: 'Registration', text: 'Регистрация', guestRequired: true }
+      ]
     }
   },
   computed: {
-    ...mapState(useUserStore, ['isAuthenticated']),
+    ...mapState(useUserStore, ['isAuthenticated', 'user']),
     getRoutes() {
-      if (this.isAuthenticated) {
-        return this.routes.filter((route) => !route.guestRequired)
-      } else {
-        return this.routes.filter((route) => !route.authRequired)
-      }
+      const isTrainer = this.user?.role === 'SPECIALIST'
+
+      return this.routes.filter(route => {
+        if (!this.isAuthenticated && route.authRequired) return false
+        if (this.isAuthenticated && route.guestRequired) return false
+        if (isTrainer && route.name === 'Reviews') return false
+        return true
+      })
     }
   }
 }

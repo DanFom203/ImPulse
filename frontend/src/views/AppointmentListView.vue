@@ -22,7 +22,7 @@
             <button @click="openChat(appointment.specialist)">Чат</button>
           </div>
           <div v-else>
-            Client: {{ appointment.client.fullName }}
+            Клиент: {{ appointment.client.fullName }}
             <button @click="openChat(appointment.client)">Чат</button>
             <div v-if="!appointment.isApproved">
               <button class="approve-button" @click="approve(appointment.id)">
