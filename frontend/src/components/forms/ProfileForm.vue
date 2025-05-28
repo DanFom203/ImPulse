@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/userStore'
 import { ref } from 'vue'
 import defaultAvatar from '@/assets/ImpulseLogo.jpg'
+import {uploadToCloudinary} from "@/services/uploadToCloudinary.js";
 
 const { user } = storeToRefs(useUserStore())
 const userStore = useUserStore()
@@ -13,13 +14,15 @@ function triggerFileInput() {
 }
 
 async function onFileSelected(event) {
-  const file = event.target.files[0]
+  const file = event.target.files?.[0]
   if (!file) return
 
-  const formData = new FormData()
-  formData.append('file', file)
-
-  await userStore.uploadProfilePhoto(formData)
+  try {
+    const imageUrl = await uploadToCloudinary(file)
+    await userStore.uploadProfilePhoto(imageUrl)
+  } catch (error) {
+    console.error('Ошибка при загрузке фото:', error)
+  }
 }
 
 function formatDate(dateStr) {
@@ -43,7 +46,7 @@ function formatDate(dateStr) {
             @change="onFileSelected"
         />
         <img
-            :src="user.profileImageUrl?.trim() ? user.profileImageUrl : defaultAvatar"
+            :src="user.avatar?.trim() ? user.avatar : defaultAvatar"
             alt="Profile Photo"
             class="profile-photo clickable"
             @click="triggerFileInput"

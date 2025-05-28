@@ -5,10 +5,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.impulse_back.dto.request.UpdateSpecialistInfoRequest;
+import ru.itis.impulse_back.dto.request.UpdateUserPhotoRequest;
 import ru.itis.impulse_back.dto.response.UserDetailsResponse;
 import ru.itis.impulse_back.security.service.JWTService;
 import ru.itis.impulse_back.service.SpecialistService;
 import ru.itis.impulse_back.service.UserService;
+
 import java.util.List;
 
 @RestController
@@ -36,7 +38,7 @@ public class ProfileController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/edit/info")
+    @PostMapping("/update/info")
     public ResponseEntity<UserDetailsResponse> editProfileInfo(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @RequestBody UpdateSpecialistInfoRequest request
@@ -46,5 +48,15 @@ public class ProfileController {
                 request.getSpecialistBio(),
                 request.getSpecialistPrice());
         return ResponseEntity.ok().body(specialistResponse);
+    }
+
+    @PostMapping("/update/avatar")
+    public ResponseEntity<UserDetailsResponse> updateProfilePhoto(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @RequestBody UpdateUserPhotoRequest request
+    ) {
+        Long userId = jwtService.getClaims(token.substring(7)).get("id").asLong();
+        UserDetailsResponse response = userService.updateUserProfilePhoto(userId, request.getProfilePhotoUrl());
+        return ResponseEntity.ok(response);
     }
 }

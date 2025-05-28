@@ -26,6 +26,7 @@ public class UserDetailsResponse {
 
     private Date createdAt;
 
+    @JsonProperty("avatar")
     private String profileImageUrl;
 
     @JsonProperty("bio")
