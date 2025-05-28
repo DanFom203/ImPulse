@@ -6,11 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.itis.impulse_back.dto.request.UpdateSpecialistInfoRequest;
-import ru.itis.impulse_back.dto.request.UpdateUserPhotoRequest;
 import ru.itis.impulse_back.dto.response.UserDetailsResponse;
 import ru.itis.impulse_back.security.service.JWTService;
 import ru.itis.impulse_back.service.SpecialistService;
 import ru.itis.impulse_back.service.UserService;
+
 import java.util.List;
 
 @RestController

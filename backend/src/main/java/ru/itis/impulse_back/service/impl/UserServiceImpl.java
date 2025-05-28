@@ -9,7 +9,6 @@ import ru.itis.impulse_back.dto.UserDto;
 import ru.itis.impulse_back.dto.response.UserDetailsResponse;
 import ru.itis.impulse_back.exception.UserAlreadyExistsException;
 import ru.itis.impulse_back.exception.UserNotFoundException;
-import ru.itis.impulse_back.mapper.AccountMapper;
 import ru.itis.impulse_back.mapper.UserDetailsMapper;
 import ru.itis.impulse_back.model.User;
 import ru.itis.impulse_back.repository.UserRepository;
