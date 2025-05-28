@@ -1,0 +1,65 @@
+.card-container {
+    width: 2000px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #1f1f1f;
+    color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 255, 153, 0.1);
+    border: 1px solid hsla(160, 100%, 37%, 0.4);
+}
+.review-form {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #1f1f1f;
+    color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 255, 153, 0.1);
+    border: 1px solid hsla(160, 100%, 37%, 0.4);
+}
+
+.form-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: hsla(160, 100%, 37%, 1);
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #ccc;
+    font-weight: 500;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    background-color: #2a2a2a;
+    color: hsla(160, 100%, 37%, 1);
+    border: 2px solid hsla(160, 100%, 37%, 0.7);
+    border-radius: 6px;
+    transition: border-color 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: hsla(160, 100%, 47%, 1);
+}
+
+.textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-error {
+    margin-top: 0.5rem;
+    color: #ff6b6b;
+    font-size: 0.9rem;
+}

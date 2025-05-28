@@ -1,12 +1,12 @@
 <template>
   <div class="auth-container">
-    <BaseAuthForm @submit.prevent="submit" :error="error" title="Sign up">
+    <BaseAuthForm @submit.prevent="submit" :error="error" title="Регистрация">
       <template v-slot:fields>
         <FormField
             name="email"
             v-model="form.email"
             :errors="v$.form.email.$errors"
-            label="Email"
+            label="Электронная почта"
             type="email"
             required
             @input="v$.form.email.$touch()"
@@ -16,7 +16,7 @@
             name="fullName"
             v-model="form.fullName"
             :errors="v$.form.fullName.$errors"
-            label="Name"
+            label="ФИО"
             required
             @input="v$.form.fullName.$touch()"
         />
@@ -25,7 +25,7 @@
             name="password"
             v-model="form.password"
             :errors="v$.form.password.$errors"
-            label="Password"
+            label="Пароль"
             type="password"
             required
             @input="v$.form.password.$touch(); v$.form.passwordRepeat.$touch()"
@@ -35,7 +35,7 @@
             name="passwordRepeat"
             v-model="form.passwordRepeat"
             :errors="v$.form.passwordRepeat.$errors"
-            label="Password again"
+            label="Повторите пароль"
             type="password"
             required
             @input="v$.form.passwordRepeat.$touch()"
@@ -51,7 +51,7 @@
               hidden
           />
           <label :class="{ active: form.role === 'CLIENT' }" for="role-client">
-            Client
+            Клиент
           </label>
 
           <input
@@ -63,7 +63,7 @@
               hidden
           />
           <label :class="{ active: form.role === 'SPECIALIST' }" for="role-specialist">
-            Specialist
+            Специалист
           </label>
 
           <input
@@ -75,18 +75,17 @@
               hidden
           />
           <label :class="{ active: form.role === 'MODERATOR' }" for="role-moderator">
-            Moderator
+            Модератор
           </label>
         </div>
-
       </template>
 
       <template v-slot:submit-button>
-        <FormSubmit value="Sign up"/>
+        <FormSubmit value="Зарегистрироваться" />
       </template>
 
       <template v-slot:links>
-        <router-link :to="{ name: 'Login' }">Sign in</router-link>
+        <router-link :to="{ name: 'Login' }">Уже есть аккаунт? Войти</router-link>
       </template>
     </BaseAuthForm>
   </div>
@@ -125,28 +124,28 @@ export default {
     const rules = computed(() => ({
       form: {
         email: {
-          required: helpers.withMessage('This field is required', required),
-          email: helpers.withMessage('Not a valid email', email)
+          required: helpers.withMessage('Обязательное поле', required),
+          email: helpers.withMessage('Некорректный email', email)
         },
         fullName: {
-          required: helpers.withMessage('This field is required', required),
-          minLength: helpers.withMessage('Min length is 1 character', minLength(1)),
-          maxLength: helpers.withMessage('Max length is 255 characters', maxLength(255))
+          required: helpers.withMessage('Обязательное поле', required),
+          minLength: helpers.withMessage('Минимум 1 символ', minLength(1)),
+          maxLength: helpers.withMessage('Максимум 255 символов', maxLength(255))
         },
         password: {
-          required: helpers.withMessage('This field is required', required),
-          minLength: helpers.withMessage('Min length is 5 characters', minLength(5)),
-          maxLength: helpers.withMessage('Max length is 255 characters', maxLength(255))
+          required: helpers.withMessage('Обязательное поле', required),
+          minLength: helpers.withMessage('Минимум 5 символов', minLength(5)),
+          maxLength: helpers.withMessage('Максимум 255 символов', maxLength(255))
         },
         passwordRepeat: {
-          required: helpers.withMessage('This field is required', required),
+          required: helpers.withMessage('Обязательное поле', required),
           sameAsPassword: helpers.withMessage(
-              'Must be the same as password',
+              'Пароли не совпадают',
               sameAs(computed(() => form.password))
           )
         },
         role: {
-          required: helpers.withMessage('This field is required', required)
+          required: helpers.withMessage('Выберите роль', required)
         }
       }
     }))

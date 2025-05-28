@@ -1,48 +1,48 @@
 <template>
   <DefaultLoader v-if="requestData.loading" />
-  <div class="text-red-500 text-center" v-else-if="requestData.error !== null">
-    {{ requestData.error.message }}
-  </div>
-
-  <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-4" v-else>
-    <div
-        class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col justify-between"
-        v-for="specialist in specialists"
-        :key="specialist.id"
-    >
-      <div>
-        <h2 class="text-xl font-semibold text-gray-800 mb-2">{{ specialist.name }}</h2>
-        <p class="text-gray-600 mb-3">{{ specialist.bio }}</p>
-
-        <div class="text-sm text-gray-500 mb-2">
-          💵 <span class="font-medium">Price:</span> {{ specialist.price }} ₽
-        </div>
-        <div class="text-sm text-gray-500 mb-2">
-          ⭐ <span class="font-medium">Rating:</span> {{ specialist.rating }}
-        </div>
-
-        <div class="text-sm text-gray-500 mb-2">
-          🛠 <span class="font-medium">Specialties:</span>
-          <ul class="list-disc list-inside mt-1">
-            <li v-for="specialty in specialist.specialties" :key="specialty.id">
-              {{ specialty.name }}
-            </li>
-          </ul>
-        </div>
-      </div>
-
+  <div
+      class="specialist-card"
+      v-for="specialist in specialists"
+      :key="specialist.id"
+  >
+    <div>
       <RouterLink
           :to="{ name: 'Specialist', params: { id: specialist.id } }"
-          class="mt-4 inline-block text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
+          class="specialist-name block cursor-pointer"
       >
-        Check out more
+        {{ specialist.name }}
       </RouterLink>
+
+      <p class="specialist-bio">{{ specialist.bio }}</p>
+
+      <div class="specialist-meta text-sm">
+        💵 <span class="font-medium">Price:</span> {{ specialist.price }} ₽
+      </div>
+      <div class="specialist-meta text-sm">
+        ⭐ <span class="font-medium">Rating:</span> {{ specialist.rating }}
+      </div>
+
+      <div class="specialist-meta text-sm">
+        🛠 <span class="font-medium">Specialties:</span>
+        <ul class="specialty-list">
+          <li v-for="specialty in specialist.specialties" :key="specialty.id">
+            {{ specialty.name }}
+          </li>
+        </ul>
+      </div>
     </div>
+
+    <RouterLink
+        :to="{ name: 'Specialist', params: { id: specialist.id } }"
+        class="view-link"
+    >
+      Check out more
+    </RouterLink>
   </div>
 </template>
 
 <script>
-import { useSpecialistStore } from '../../stores/specialistStore.js'
+import { useSpecialistStore } from '@/stores/specialistStore.js'
 import DefaultLoader from '../utils/DefaultLoader.vue'
 import { mapState } from 'pinia'
 export default {
@@ -58,7 +58,62 @@ export default {
 </script>
 
 <style scoped>
-.specialist {
-  border: 1px solid black;
+.specialist-card {
+  background-color: #1f1f1f; /* как фон формы */
+  color: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 0 12px hsla(160, 100%, 37%, 0.3);
+  border: 1px solid hsla(160, 100%, 37%, 0.4);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.specialist-card:hover {
+  box-shadow: 0 0 24px hsla(160, 100%, 47%, 0.8);
+  transform: translateY(-4px);
+}
+
+.specialist-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: hsla(160, 100%, 37%, 1);
+  margin-bottom: 0.5rem;
+  transition: color 0.3s;
+}
+
+.specialist-name:hover {
+  color: hsla(160, 100%, 47%, 1);
+}
+
+.specialist-bio,
+.specialist-meta {
+  color: #ccc;
+  margin-bottom: 0.75rem;
+}
+
+.specialty-list {
+  list-style: disc;
+  list-style-position: inside;
+  margin-top: 0.5rem;
+  color: #bbb;
+}
+
+.view-link {
+  background-color: hsla(160, 100%, 37%, 1);
+  color: #000;
+  font-weight: 600;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  margin-top: 1rem;
+  transition: background-color 0.3s;
+}
+
+.view-link:hover {
+  background-color: hsla(160, 100%, 47%, 1);
+  color: #000;
 }
 </style>

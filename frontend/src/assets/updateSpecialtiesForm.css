@@ -1,0 +1,176 @@
+:root {
+    --neon-green: #00ff99;
+    --neon-green-dark: #005533;
+    --neon-glow: #00ff99cc;
+    --background-dark: #0b1a0b;
+    --text-light: #aaffaa;
+    --input-bg: #072407;
+    --input-border: #00ff99;
+    --input-focus-shadow: 0 0 8px var(--neon-glow);
+    --button-bg: #007733;
+    --button-hover-bg: #00ff99;
+}
+
+/* Контейнер формы */
+.form {
+    max-width: 480px;
+    margin: 24px auto;
+    background-color: var(--background-dark);
+    padding: 28px 24px;
+    border-radius: 18px;
+    box-shadow: 0 0 24px var(--neon-glow);
+    color: var(--text-light);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none;
+}
+
+/* Заголовок */
+.title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    text-align: center;
+    text-shadow:
+            0 0 5px var(--neon-green),
+            0 0 12px var(--neon-green),
+            0 0 20px var(--neon-green);
+}
+
+/* Секция со списком специализаций */
+.specialties {
+    max-height: 230px;
+    overflow-y: auto;
+    border: 2px solid var(--input-border);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 24px;
+    background-color: var(--input-bg);
+    box-shadow: inset 0 0 14px #004411;
+}
+
+/* Обертка для скролла */
+.scrollable-specialties {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Один элемент специализации */
+.specialty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+}
+
+/* Метка с текстом */
+.specialty label {
+    cursor: pointer;
+    color: var(--neon-green);
+    text-shadow: 0 0 5px var(--neon-green);
+    user-select: none;
+}
+
+/* Чекбоксы */
+.specialty input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--neon-green);
+    cursor: pointer;
+    filter: drop-shadow(0 0 3px var(--neon-green));
+}
+
+/* Стиль кнопок и инпутов под добавление кастомной специализации */
+.custom-specialty {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    color: var(--text-light);
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.custom-specialty label {
+    font-weight: 600;
+    text-shadow: 0 0 5px var(--neon-green);
+    flex: 1 0 140px;
+    user-select: none;
+}
+
+.custom-specialty input[type="text"] {
+    flex: 2 1 auto;
+    padding: 10px 14px;
+    font-size: 1rem;
+    border-radius: 12px;
+    border: 2px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--text-light);
+    outline: none;
+    transition: box-shadow 0.3s ease;
+    text-shadow: 0 0 3px #004400;
+}
+
+.custom-specialty input[type="text"]:focus {
+    box-shadow: var(--input-focus-shadow);
+    border-color: var(--neon-green);
+}
+
+/* Кнопка добавить */
+.custom-specialty button {
+    padding: 10px 20px;
+    font-weight: 700;
+    border: none;
+    border-radius: 16px;
+    background-color: var(--button-bg);
+    color: var(--text-light);
+    cursor: pointer;
+    box-shadow:
+            0 0 8px var(--neon-glow),
+            0 0 20px var(--neon-glow);
+    transition: background-color 0.3s ease;
+    user-select: none;
+}
+
+.custom-specialty button:hover {
+    background-color: var(--button-hover-bg);
+    box-shadow:
+            0 0 12px var(--neon-glow),
+            0 0 28px var(--neon-glow);
+}
+
+/* Для компонента FormSubmit тоже можно добавить стиль кнопки с неоном */
+/* Если FormSubmit — это кнопка, то пусть у неё класс submit-button */
+
+.submit-button {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px 0;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--text-light);
+    background-color: var(--button-bg);
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    box-shadow:
+            0 0 12px var(--neon-glow),
+            0 0 24px var(--neon-glow);
+    transition: background-color 0.3s ease;
+    user-select: none;
+}
+
+.submit-button:hover {
+    background-color: var(--button-hover-bg);
+    box-shadow:
+            0 0 18px var(--neon-glow),
+            0 0 30px var(--neon-glow);
+}
+
+/* Подгрузка (DefaultLoader) центрируется */
+.default-loader {
+    margin: 16px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

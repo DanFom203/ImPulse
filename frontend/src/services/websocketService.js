@@ -12,20 +12,22 @@
 },
     data() {
     return {
-    stompClient: null,
-    connected: false,
-    messages: [],
-    messageText: '',
-    currentUserId: null,
-    pollingInterval: null
+        stompClient: null,
+        connected: false,
+        messages: [],
+        messageText: '',
+        currentUserId: null,
+        pollingInterval: null,
+        currentUserRole: null,
 }
 },
     mounted() {
-    console.log('🔍 mounted: компонент загружен')
-    const token = getTokenFromStorage()
-    if (token) {
-    const payload = JSON.parse(atob(token.split('.')[1]))
-    this.currentUserId = payload.id
+        console.log('🔍 mounted: компонент загружен')
+        const token = getTokenFromStorage()
+        if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]))
+        this.currentUserId = payload.id
+        this.currentUserRole = payload.role || 'Client'
     console.log('🔍 currentUserId установлен:', this.currentUserId)
 } else {
     console.warn('⚠️ mounted: нет токена')
@@ -44,6 +46,10 @@
 }
 },
     methods: {
+        capitalize(str) {
+            if (!str) return ''
+            return str.charAt(0).toUpperCase() + str.slice(1)
+        },
     async pollForNewMessages() {
     console.log('🔄 pollForNewMessages: опрос сервера...')
     const token = getTokenFromStorage()
@@ -145,48 +151,57 @@
     console.log('ℹ️ onMessageReceived: сообщение не для текущего собеседника, игнорируем');
 }
 },
-    sendMessage() {
-    console.log('🔍 sendMessage: попытка отправки сообщения')
-    if (!this.connected) {
-    console.warn('⚠️ sendMessage: WebSocket не подключён')
-    return
-}
-    if (!this.messageText.trim()) {
-    console.warn('⚠️ sendMessage: пустое сообщение')
-    return
+        sendMessage() {
+            console.log('🔍 sendMessage: попытка отправки сообщения')
+            if (!this.connected) {
+                console.warn('⚠️ sendMessage: WebSocket не подключён')
+                return
+            }
+            if (!this.messageText.trim()) {
+                console.warn('⚠️ sendMessage: пустое сообщение')
+                return
+            }
+
+            const token = getTokenFromStorage()
+            if (!token) {
+                console.warn('⚠️ sendMessage: нет токена')
+                return alert('Not authenticated')
+            }
+
+            // Определяем роль текущего пользователя
+            const currentUserRole = this.getUserRole(this.currentUserId)
+
+            const payload = {
+                senderId: this.currentUserId,        // явно указываем отправителя
+                senderRole: currentUserRole,         // роль отправителя (client / specialist)
+                receiverId: this.interlocutor.id,
+                body: this.messageText.trim()
+            }
+
+            console.log('🔍 sendMessage: отправляем через STOMP:', payload)
+            this.stompClient.send('/app/chat',
+                { Authorization: `Bearer ${token}` },
+                JSON.stringify(payload)
+            )
+
+            this.messageText = ''
+            this.messages.push(payload)  // добавляем сообщение с ролью
+            this.scrollToBottom()
+            console.log('🔍 sendMessage: поле ввода очищено')
+        },
+        getUserRole(userId) {
+            // Предполагаем, что у interlocutor есть поле role: 'client' или 'specialist'
+            // и что текущий пользователь - противоположная роль.
+            // Если у тебя данные устроены иначе — адаптируй под себя.
+
+            if (userId === this.currentUserId) {
+                // Определим роль текущего пользователя, исходя из interlocutor.role
+                return this.interlocutor.role === 'specialist' ? 'client' : 'specialist'
+            } else if (userId === this.interlocutor.id) {
+                return this.interlocutor.role
+            }
+            return 'unknown'
+        },
+    }
 }
 
-    const token = getTokenFromStorage()
-    if (!token) {
-    console.warn('⚠️ sendMessage: нет токена')
-    return alert('Not authenticated')
-}
-
-    const payload = {
-    receiverId: this.interlocutor.id,
-    body: this.messageText.trim()
-}
-
-    console.log('🔍 sendMessage: отправляем через STOMP:', payload)
-    this.stompClient.send('/app/chat',
-{ Authorization: `Bearer ${token}` },
-    JSON.stringify(payload)
-    )
-
-    this.messageText = ''
-    this.messages.push(payload)
-    this.scrollToBottom()
-    console.log('🔍 sendMessage: поле ввода очищено')
-},
-    scrollToBottom() {
-    this.$nextTick(() => {
-    const container = this.$refs.chatContainer
-    if (container) {
-    container.scrollTop = container.scrollHeight
-} else {
-    console.warn('⚠️ scrollToBottom: контейнер не найден')
-}
-})
-}
-},
-}

@@ -1,0 +1,21 @@
+.header {
+    display: flex;
+    /* flex-wrap: wrap; */
+    justify-content: space-between;
+    border-bottom: 1px solid black;
+    padding: 15px;
+}
+
+.home-link {
+    font-size: 25px;
+}
+
+.nav {
+    display: flex;
+}
+
+.nav-item {
+    list-style-type: none;
+    font-size: 25px;
+    margin-right: 25px;
+}

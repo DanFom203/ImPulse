@@ -2,7 +2,7 @@
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import MainLayout from '@/components/blocks/MainLayout.vue'
-import defaultAvatar from '@/assets/logo.svg'
+import defaultAvatar from '@/assets/ImpulseLogo.jpg'
 import { useModeratorStore } from '@/stores/moderatorStore'
 
 const moderatorStore = useModeratorStore()

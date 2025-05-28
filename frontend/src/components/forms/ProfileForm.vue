@@ -2,7 +2,7 @@
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/userStore'
 import { ref } from 'vue'
-import defaultAvatar from '@/assets/logo.svg'
+import defaultAvatar from '@/assets/ImpulseLogo.jpg'
 
 const { user } = storeToRefs(useUserStore())
 const userStore = useUserStore()
@@ -81,4 +81,4 @@ function formatDate(dateStr) {
   </div>
 </template>
 
-<style scoped src="@/assets/profile.css"></style>
+<style src="@/assets/profile.css" scoped></style>

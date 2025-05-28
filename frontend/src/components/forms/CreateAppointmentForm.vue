@@ -1,31 +1,33 @@
 <template>
-  <form action="POST" @submit.prevent="this.submit()" class="form">
-    <div class="title">Create appointment for this specialist?</div>
-    <div class="datetime">
-      <label for="datetime">Appointment date and time</label>
+  <form @submit.prevent="submit()" class="card-container appointment-form">
+    <h3 class="form-title">Записаться к специалисту</h3>
+
+    <div class="form-group">
+      <label for="datetime">Дата и время приёма</label>
       <input
-        type="datetime-local"
-        name="datetime"
-        id="datetime"
-        :value="form.datetime.toISOString().slice(0, 16)"
-        @input="form.datetime = new Date($event.target.value)"
+          type="datetime-local"
+          name="datetime"
+          id="datetime"
+          class="form-input"
+          :value="form.datetime.toISOString().slice(0, 16)"
+          @input="form.datetime = new Date($event.target.value)"
       />
-      <div v-if="this.v$.form.datetime.$errors[0]">
+      <div class="form-error" v-if="this.v$.form.datetime.$errors[0]">
         {{ this.v$.form.datetime.$errors[0].$message }}
       </div>
     </div>
 
-    <FormSubmit value="Create appointment" />
+    <FormSubmit value="Записаться" class="submit-button" />
   </form>
 </template>
 
 <script>
 import useVuelidate from '@vuelidate/core'
 import { minValue, required, helpers } from '@vuelidate/validators'
-import { useAppointmentStore } from '../../stores/appointmentStore.js'
+import { useAppointmentStore } from '@/stores/appointmentStore.js'
 import { mapActions, mapState } from 'pinia'
 import FormSubmit from './FormSubmit.vue'
-import { CreateAppointmentDto } from '../../models/dto.js'
+import { CreateAppointmentDto } from '@/models/dto.js'
 
 export default {
   name: 'CreateAppointmentForm',
@@ -75,8 +77,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.form {
-  border: 1px solid black;
-}
-</style>
+<style src="@/assets/createAppointmentForm.css" scoped></style>

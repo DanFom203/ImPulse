@@ -1,12 +1,12 @@
 <template>
   <div class="auth-container">
-    <BaseAuthForm @submit.prevent="submit" :error="error" title="Sign in">
+    <BaseAuthForm @submit.prevent="submit" :error="error" title="Вход">
       <template v-slot:fields>
         <FormField
             name="email"
             v-model="form.email"
             :errors="v$.form.email.$errors"
-            label="Email"
+            label="Электронная почта"
             type="email"
             required
             @input="touchField('email')"
@@ -15,7 +15,7 @@
             name="password"
             v-model="form.password"
             :errors="v$.form.password.$errors"
-            label="Password"
+            label="Пароль"
             type="password"
             required
             @input="touchField('password')"
@@ -23,25 +23,24 @@
       </template>
 
       <template v-slot:submit-button>
-        <FormSubmit value="Sign in" />
+        <FormSubmit value="Войти" />
       </template>
 
       <template v-slot:links>
-        <router-link class="router-link" :to="{ name: 'Registration' }">Sign up</router-link>
+        <router-link class="router-link" :to="{ name: 'Registration' }">Зарегистрироваться</router-link>
       </template>
     </BaseAuthForm>
   </div>
 </template>
-
 <script>
 import BaseAuthForm from './BaseAuthForm.vue'
 import FormField from './FormField.vue'
 import useVuelidate from '@vuelidate/core'
 import { email, maxLength, minLength, required, helpers } from '@vuelidate/validators'
-import { useUserStore } from '../../stores/userStore.js'
+import { useUserStore } from '@/stores/userStore.js'
 import { mapActions, mapState } from 'pinia'
 import FormSubmit from './FormSubmit.vue'
-import { LoginDto } from '../../models/dto.js'
+import { LoginDto } from '@/models/dto.js'
 
 export default {
   name: 'LoginForm',
@@ -66,13 +65,13 @@ export default {
   validations: {
     form: {
       email: {
-        required: helpers.withMessage('This field is required', required),
-        email: helpers.withMessage('Not a valid email', email)
+        required: helpers.withMessage('Обязательное поле', required),
+        email: helpers.withMessage('Некорректный email', email)
       },
       password: {
-        required: helpers.withMessage('This field is required', required),
-        minLength: helpers.withMessage('Min length is 5 characters', minLength(5)),
-        maxLength: helpers.withMessage('Max length is 255 characters', maxLength(255))
+        required: helpers.withMessage('Обязательное поле', required),
+        minLength: helpers.withMessage('Минимум 5 символов', minLength(5)),
+        maxLength: helpers.withMessage('Максимум 255 символов', maxLength(255))
       }
     }
   },
@@ -96,4 +95,4 @@ export default {
 }
 </script>
 
-<style src="./src/assets/Auth.css"></style>
+<style src="@/assets/Auth.css"></style>

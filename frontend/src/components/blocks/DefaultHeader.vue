@@ -17,7 +17,7 @@
 
 <script>
 import { mapState } from 'pinia'
-import { useUserStore } from '../../stores/userStore.js'
+import { useUserStore } from '@/stores/userStore.js'
 
 export default {
   name: 'DefaultHeader',
@@ -26,41 +26,41 @@ export default {
       routes: [
         {
           name: 'Home',
-          text: 'Home'
+          text: 'Главная'
         },
         {
           name: 'Profile',
-          text: 'My profile',
+          text: 'Профиль',
           authRequired: true
         },
         {
           name: 'SpecialistSearch',
-          text: 'Find specialist',
+          text: 'Найти тренера',
           authRequired: true
         },
         {
           name: 'AppointmentList',
-          text: 'My appointments',
+          text: 'Мои записи',
           authRequired: true
         },
         {
           name: 'Reviews',
-          text: 'My reviews',
+          text: 'Мои отзывы',
           authRequired: true
         },
         {
           name: 'Login',
-          text: 'Sign in',
+          text: 'Вход',
           guestRequired: true
         },
         {
           name: 'Logout',
-          text: 'Logout',
+          text: 'Выход',
           authRequired: true
         },
         {
           name: 'Registration',
-          text: 'Sign up',
+          text: 'Регистрация',
           guestRequired: true
         }
       ],
@@ -79,27 +79,4 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.header {
-  display: flex;
-  /* flex-wrap: wrap; */
-  justify-content: space-between;
-  border-bottom: 1px solid black;
-  padding: 15px;
-}
-
-.home-link {
-  font-size: 25px;
-}
-
-.nav {
-  display: flex;
-}
-
-.nav-item {
-  list-style-type: none;
-  font-size: 25px;
-  margin-right: 25px;
-}
-</style>
+<style src="@/assets/header.css" scoped></style>

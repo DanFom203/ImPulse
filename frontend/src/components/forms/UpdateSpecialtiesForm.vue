@@ -1,6 +1,6 @@
 <template>
   <form action="POST" @submit.prevent="this.submit()" class="form">
-    <div class="title">Хотите обновить свою тренерскую специализацию?</div>
+    <div class="title">Обновить специализацию?</div>
 
     <DefaultLoader v-if="specialtyStoreRequestData.loading" />
     <div class="specialties" v-else>
@@ -18,7 +18,7 @@
     </div>
 
     <DefaultLoader v-if="userStoreRequestData.loading" />
-    <FormSubmit value="Update specialties" v-else />
+    <FormSubmit value="Обновить специальности" v-else />
 
   </form>
 
@@ -114,16 +114,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.form {
-  border: 1px solid black;
-}
-
-.scrollable-specialties {
-  max-height: 300px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  padding: 8px;
-  margin-bottom: 16px;
-}
-</style>
+<style src="@/assets/specialistSearchForm.css" scoped></style>
