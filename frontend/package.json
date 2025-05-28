@@ -18,6 +18,7 @@
     "pinia": "^2.1.7",
     "sockjs-client": "^1.6.1",
     "stomp-websocket": "^2.3.4-next",
+    "swiper": "^11.2.8",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
