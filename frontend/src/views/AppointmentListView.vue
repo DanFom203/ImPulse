@@ -7,61 +7,77 @@
     </div>
     <div class="appointment-data" v-else>
       <div class="appointments">
-        <div v-for="appointment in appointments" v-bind:key="appointment.id" class="appointment">
-          <div class="appointment-for-client" v-if="user.role === 'CLIENT'">
-            <div class="appointment-specialist">
-              <div class="specialist-name">
-                Specialist:
-                <RouterLink :to="{ name: 'Specialist', params: { id: appointment.specialist.id } }">
-                  {{ appointment.specialist.fullName }}
-                </RouterLink>
-              </div>
-              <div class="specialist-rating">Rating: {{ appointment.specialist.rating }}</div>
+        <div v-for="appointment in appointments" :key="appointment.id" class="appointment">
+          <div v-if="user.role === 'CLIENT'">
+            <div>
+              Specialist:
+              <RouterLink :to="{ name: 'Specialist', params: { id: appointment.specialist.id } }">
+                {{ appointment.specialist.fullName }}
+              </RouterLink>
+              <button @click="openChat(appointment.specialist)">Chat</button>
             </div>
           </div>
-          <div class="appointment-for-specialist" v-else>
-            <div class="appointment-client">
-              <div class="client-name">Client: {{ appointment.client.fullName }}</div>
+          <div v-else>
+            <div>
+              Client: {{ appointment.client.fullName }}
+              <button @click="openChat(appointment.client)">Chat</button>
             </div>
-
-            <div class="appointment-approve" v-if="!appointment.isApproved">
+            <div v-if="!appointment.isApproved">
               <button class="approve-button" @click="approve(appointment.id)">Approve</button>
             </div>
           </div>
-
-          <div class="appointment-price">Price: {{ appointment.price }}</div>
-
-          <div class="appointment-scheduled">
-            Scheduled at: {{ appointment.scheduledAt.slice(0, 16) }}
-          </div>
-
-          <div class="appointment-status">
-            <span class="approved" v-if="appointment.isApproved">Approved</span>
-            <span class="not-approved" v-else>Not approved yet</span>
+          <div>Price: {{ appointment.price }}</div>
+          <div>Scheduled at: {{ appointment.scheduledAt.slice(0, 16) }}</div>
+          <div>
+            <span v-if="appointment.isApproved" class="approved">Approved</span>
+            <span v-else class="not-approved">Not approved yet</span>
           </div>
         </div>
       </div>
     </div>
+
+    <ChatWidget
+        v-if="selectedInterlocutor"
+        :interlocutor="selectedInterlocutor"
+        @close="closeChat"
+    />
   </MainLayout>
 </template>
 
 <script>
 import MainLayout from '../components/blocks/MainLayout.vue'
+import ChatWidget from '../components/blocks/ChatWidget.vue'
+import DefaultLoader from '../components/utils/DefaultLoader.vue'
 import { useAppointmentStore } from '../stores/appointmentStore.js'
 import { useUserStore } from '../stores/userStore.js'
 import { mapActions, mapState } from 'pinia'
-import DefaultLoader from '../components/utils/DefaultLoader.vue'
 
 export default {
   name: 'AppointmentListView',
-  components: { MainLayout, DefaultLoader },
+  components: {
+    MainLayout,
+    DefaultLoader,
+    ChatWidget
+  },
+  data() {
+    return {
+      selectedInterlocutor: null
+    }
+  },
   async beforeMount() {
     this.fetchAppointments()
   },
   methods: {
     ...mapActions(useAppointmentStore, ['fetchAppointments', 'approveAppointment']),
     async approve(appointmentId) {
-      this.approveAppointment(appointmentId)
+      await this.approveAppointment(appointmentId)
+    },
+    openChat(user) {
+      console.log('openChat called with', user)
+      this.selectedInterlocutor = user
+    },
+    closeChat() {
+      this.selectedInterlocutor = null
     }
   },
   computed: {
@@ -77,13 +93,15 @@ export default {
 <style scoped>
 .appointment {
   border: 1px solid black;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
 .approved {
-  background-color: lightgreen;
+  color: #00bd7e;
 }
 
 .not-approved {
-  background-color: yellow;
+  color: yellow;
 }
 </style>

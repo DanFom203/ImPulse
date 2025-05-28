@@ -1,31 +1,42 @@
 <template>
   <DefaultLoader v-if="requestData.loading" />
-  <div class="error" v-else-if="requestData.error !== null">
+  <div class="text-red-500 text-center" v-else-if="requestData.error !== null">
     {{ requestData.error.message }}
   </div>
-  <div class="specialistList" v-else>
-    <div class="specialist" v-for="specialist in specialists" v-bind:key="specialist.id">
-      <div class="link">
-        <RouterLink :to="{ name: 'Specialist', params: { id: specialist.id } }"
-          >Check out more</RouterLink
-        >
+
+  <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-4" v-else>
+    <div
+        class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col justify-between"
+        v-for="specialist in specialists"
+        :key="specialist.id"
+    >
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-2">{{ specialist.name }}</h2>
+        <p class="text-gray-600 mb-3">{{ specialist.bio }}</p>
+
+        <div class="text-sm text-gray-500 mb-2">
+          💵 <span class="font-medium">Price:</span> {{ specialist.price }} ₽
+        </div>
+        <div class="text-sm text-gray-500 mb-2">
+          ⭐ <span class="font-medium">Rating:</span> {{ specialist.rating }}
+        </div>
+
+        <div class="text-sm text-gray-500 mb-2">
+          🛠 <span class="font-medium">Specialties:</span>
+          <ul class="list-disc list-inside mt-1">
+            <li v-for="specialty in specialist.specialties" :key="specialty.id">
+              {{ specialty.name }}
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="name">Name: {{ specialist.name }}</div>
-      <div class="bio">Bio: {{ specialist.bio }}</div>
-      <div class="price">Price: {{ specialist.price }} рублёв</div>
-      <div class="rating">Рейтинг: {{ specialist.rating }}</div>
-      <div class="specialtyList">
-        <div>Специальности:</div>
-        <ul class="specialtyListUl">
-          <li
-            class="specialty"
-            v-for="specialty in specialist.specialties"
-            v-bind:key="specialty.id"
-          >
-            {{ specialty.name }}
-          </li>
-        </ul>
-      </div>
+
+      <RouterLink
+          :to="{ name: 'Specialist', params: { id: specialist.id } }"
+          class="mt-4 inline-block text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
+      >
+        Check out more
+      </RouterLink>
     </div>
   </div>
 </template>
