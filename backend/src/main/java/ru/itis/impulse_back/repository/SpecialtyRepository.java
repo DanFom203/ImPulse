@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.itis.impulse_back.model.Specialty;
 
 @Repository
-public interface SpecialtyRepository extends JpaRepository<Specialty, Long> {
+public interface SpecialtyRepository extends JpaRepository<Specialty, Long>, SpecialtyRepositoryCustom{
 }

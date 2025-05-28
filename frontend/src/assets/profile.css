@@ -1,0 +1,146 @@
+:root {
+    --profile-scale: 3;
+    --base-font-size: 16px;
+    --profile-bg-light: #ffffff;
+    --profile-bg-dark: #1e1e1e;
+    --profile-custom-bg: var(--profile-bg-light); /* дефолтный фон */
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --profile-custom-bg: var(--profile-bg-dark);
+    }
+}
+
+.profile-layout {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 24px;
+}
+
+.profile {
+    flex-grow: 1;
+    background-color: var(--profile-custom-bg);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+    display: flex;
+    gap: calc(20px * var(--profile-scale));
+    align-items: center;
+}
+
+.profile-photo {
+    width: calc(80px * var(--profile-scale));
+    height: calc(80px * var(--profile-scale));
+    border-radius: 50%;
+    object-fit: cover;
+    border: calc(3px * var(--profile-scale)) solid #ccc;
+}
+
+.profile-photo-wrapper {
+    position: relative;
+}
+
+.profile-photo.clickable {
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.profile-photo.clickable:hover {
+    opacity: 0.7;
+}
+
+.file-input {
+    display: none;
+}
+
+.profile-info p,
+.profile-info h2,
+.specialist-section p,
+.specialist-section ul {
+    margin: calc(10px * var(--profile-scale)) 0;
+}
+
+.admin-badge {
+    font-weight: bold;
+    color: crimson;
+}
+
+details {
+    margin-top: calc(16px * var(--profile-scale));
+    cursor: pointer;
+}
+
+summary {
+    font-weight: bold;
+    margin-bottom: calc(8px * var(--profile-scale));
+}
+
+.review-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.review-card {
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.review-client {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.review-rating {
+    background-color: #ffd700;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #000;
+}
+
+.review-comment {
+    margin: 10px 0;
+    line-height: 1.4;
+}
+
+.review-date {
+    color: #666;
+    font-size: 0.85rem;
+}
+
+/* 🌙 Темная тема */
+@media (prefers-color-scheme: dark) {
+    .review-card {
+        background-color: #2a2a2a;
+        border-color: #444;
+    }
+
+    .review-rating {
+        background-color: #bfa500;
+        color: #fff;
+    }
+
+    .review-date {
+        color: #aaa;
+    }
+}
+

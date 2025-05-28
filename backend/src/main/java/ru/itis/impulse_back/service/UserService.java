@@ -5,6 +5,8 @@ import ru.itis.impulse_back.model.User;
 
 public interface UserService {
     void create(User user);
+
     UserDto getByEmail(String email);
+
     void deleteAccount(Long userId);
 }

@@ -89,6 +89,12 @@ const router = createRouter({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '/moderation/accounts',
+      name: 'ModerationPage',
+      component: () => import('@/views/ModerationView.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true }
     }
   ]
 })

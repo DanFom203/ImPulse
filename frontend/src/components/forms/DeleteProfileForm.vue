@@ -1,6 +1,6 @@
 <template>
   <form action="POST" @submit.prevent="this.submit()" class="form">
-    <div class="title">Delete profile</div>
+    <div class="title">Хотите удалить свой профиль?</div>
 
     <FormSubmit value="Delete profile" />
   </form>

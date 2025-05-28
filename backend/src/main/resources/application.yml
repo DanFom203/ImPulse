@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: "jdbc:postgresql://localhost:5432/impulse_db"
     username: postgres
-    password: postgres
+    password: Danfom2004
   jpa:
     database: postgresql
     properties:

@@ -30,7 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation("org.springframework.boot:spring-boot-starter-websocket:3.2.9")
 	implementation 'org.postgresql:postgresql:42.7.2'
-	implementation('org.mapstruct:mapstruct:1.5.3.Final')
+	implementation('org.mapstruct:mapstruct:1.5.5.Final')
 	implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.14'
 	implementation 'org.json:json:20231013'
 	implementation 'com.auth0:java-jwt:4.4.0'
@@ -38,6 +38,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 
 	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
