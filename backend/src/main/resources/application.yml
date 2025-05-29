@@ -2,24 +2,11 @@ server:
   port: 8080
 
 spring:
-  primary:
-    datasource:
-      url: jdbc:postgresql://localhost:5432/impulse_db
-      username: postgres
-      password: postgres
-      driver-class-name: org.postgresql.Driver
-      hikari:
-        pool-name: MasterPool
-
-
-  replica:
-    datasource:
-      url: jdbc:postgresql://localhost:5433/impulse_db
-      username: postgres
-      password: postgres
-      driver-class-name: org.postgresql.Driver
-      hikari:
-        pool-name: ReplicaPool
+  datasource:
+    url: jdbc:postgresql://localhost:6434/impulse_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
 
 
 
