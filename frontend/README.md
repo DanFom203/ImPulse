@@ -36,3 +36,7 @@ npm run lint
 ```sh
 npm run format
 ```
+
+```sh
+npm run test
+```
