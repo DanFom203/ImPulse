@@ -3,17 +3,9 @@ server:
 
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: "jdbc:postgresql://localhost:5432/impulse_db"
+    url: jdbc:postgresql://db:5432/impulse_db
     username: postgres
-    password: postgres
-  jpa:
-    database: postgresql
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        hbm2ddl:
-          auto: update
+    password: Danfom2004
 
 jwt:
   secret: secret-key
@@ -24,3 +16,12 @@ api:
   cors:
     allowed-origins: http://localhost:8080,http://localhost:5173,http://localhost:5174
       
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  prometheus:
+    metrics:
+      export:
+        enabled: true

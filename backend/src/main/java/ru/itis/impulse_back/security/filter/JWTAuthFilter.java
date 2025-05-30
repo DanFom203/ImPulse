@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Collections;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JWTAuthFilter extends OncePerRequestFilter {
@@ -29,6 +31,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.debug("No JWT token found in request header for URI: {}", request.getRequestURI());
             filterChain.doFilter(request, response);
             return;
         }
@@ -41,17 +44,18 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             boolean isTokenExpired = tokenExpiresAt.isBefore(Instant.now());
 
             if (!isTokenExpired) {
+                log.debug("Valid JWT for user [{}] on URI: {}", email, request.getRequestURI());
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        email,
-                        null,
-                        Collections.emptyList()
+                        email, null, Collections.emptyList()
                 );
-
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                log.warn("Expired JWT token for user [{}] on URI: {}", email, request.getRequestURI());
             }
 
             filterChain.doFilter(request, response);
         } catch (JWTVerificationException e) {
+            log.warn("JWT verification failed: {}", e.getMessage());
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }

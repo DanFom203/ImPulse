@@ -25,6 +25,7 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -34,17 +35,24 @@ dependencies {
 	implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.14'
 	implementation 'org.json:json:20231013'
 	implementation 'com.auth0:java-jwt:4.4.0'
-
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
 	implementation("org.webjars:stomp-websocket:2.3.4")
 	implementation("org.webjars:sockjs-client:1.5.1")
 	implementation("org.webjars:jquery:3.6.0")
 	implementation("org.webjars:bootstrap:4.6.0")
 	implementation("org.webjars:webjars-locator-core:0.46")
+	implementation 'io.micrometer:micrometer-registry-prometheus:1.15.0'
 
 	compileOnly 'org.projectlombok:lombok'
 
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
+
+	implementation 'commons-io:commons-io:2.14.0'
+	testImplementation 'org.seleniumhq.selenium:selenium-devtools-v128:4.25.0'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+	testImplementation 'io.github.bonigarcia:webdrivermanager:6.1.0'
+	testImplementation 'org.seleniumhq.selenium:selenium-java:4.25.0'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
