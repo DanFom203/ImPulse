@@ -17,17 +17,34 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JWTAuthFilter extends OncePerRequestFilter {
+
     private final JWTService jwtService;
+    private static final List<String> EXCLUDED_PATHS = List.of(
+            "/api/v1/auth/register",
+            "/api/v1/auth/login",
+            "/api/v1/auth/refresh",
+            "/actuator/prometheus",
+            "/ws"
+    );
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
+        String path = request.getRequestURI();
+
+        if (EXCLUDED_PATHS.stream().anyMatch(path::startsWith)) {
+            log.debug("Skipping JWT filter for public path: {}", path);
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
