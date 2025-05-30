@@ -1,0 +1,18 @@
+<configuration>
+
+    <contextName>spring-app</contextName>
+
+    <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"app_name":"spring-app","env":"dev"}</customFields>
+        </encoder>
+    </appender>
+
+    <logger name="com.impulse.controller" level="DEBUG"/>
+
+    <root level="INFO">
+        <appender-ref ref="JSON_CONSOLE"/>
+    </root>
+
+</configuration>
+

@@ -1,6 +1,7 @@
 package ru.itis.impulse_back.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import ru.itis.impulse_back.service.SpecialistService;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${api.uri}/specialist")
@@ -22,7 +24,10 @@ public class SpecialistController {
 
     @PostMapping("/find")
     public ResponseEntity<List<SearchSpecialistResponse>> searchSpecialists(@RequestBody SearchSpecialistRequest request) {
+        log.info("Searching specialists with filter: {}", request);
+
         List<User> specialists = specialistService.getAllByFilter(request);
+        log.debug("Found {} specialists matching filter", specialists.size());
 
         List<SearchSpecialistResponse> searchSpecialistResponse = new ArrayList<>();
 
@@ -44,6 +49,7 @@ public class SpecialistController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SearchSpecialistByIdResponse> getById(@PathVariable Long id) {
+        log.info("Fetching specialist details for ID: {}", id);
         User user = specialistService.getById(id);
 
         SearchSpecialistByIdResponse response = SearchSpecialistByIdResponse.builder()
@@ -72,6 +78,7 @@ public class SpecialistController {
 
         response.setReviews(reviews);
 
+        log.debug("Returning specialist details for ID {} with {} reviews", id, reviews.size());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

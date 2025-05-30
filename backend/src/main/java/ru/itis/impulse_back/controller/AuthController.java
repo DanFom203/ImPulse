@@ -1,6 +1,7 @@
 package ru.itis.impulse_back.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Locale;
 
+@Slf4j
 @RestController
 @RequestMapping("${api.uri}/auth")
 @RequiredArgsConstructor
@@ -32,6 +34,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
+        log.info("Registration attempt for email: {}", registerRequest.getEmail());
         String token = authService.register(registerRequest);
         UserDetailsResponse userDetailsResponse = UserDetailsResponse.builder()
                 .email(registerRequest.getEmail())
@@ -41,6 +44,7 @@ public class AuthController {
                 .build();
 
         UserDto user = userService.getByEmail(registerRequest.getEmail());
+        log.debug("User [{}] registered with role [{}]", user.getEmail(), user.getRole());
         
         if (user.getRole().equals(User.UserRole.SPECIALIST)) {
                 userDetailsResponse.setSpecialistBio(user.getSpecialistBio());
@@ -68,9 +72,11 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        log.info("Login attempt for email: {}", loginRequest.getEmail());
         String token = authService.login(loginRequest);
 
         UserDto user = userService.getByEmail(loginRequest.getEmail());
+        log.debug("User [{}] logged in successfully with role [{}]", user.getEmail(), user.getRole());
 
         UserDetailsResponse userDetailsResponse = UserDetailsResponse.builder()
                 .email(loginRequest.getEmail())

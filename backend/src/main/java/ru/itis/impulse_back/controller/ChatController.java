@@ -1,6 +1,7 @@
 package ru.itis.impulse_back.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Header;
@@ -23,6 +24,7 @@ import ru.itis.impulse_back.service.MessageService;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ChatController {
@@ -43,14 +45,17 @@ public class ChatController {
             @Payload SendMessageRequest request,
             @Header("Authorization") String tokenHeader
     ) {
+        log.info("Processing chat message from header: {}", tokenHeader);
         if (tokenHeader == null || tokenHeader.isEmpty()) {
+            log.warn("Missing Authorization header");
             throw new RuntimeException("Authorization header is missing");
         }
         String token = tokenHeader.startsWith("Bearer ") ? tokenHeader.substring(7) : tokenHeader;
         Long senderId = jwtService.getClaims(token).get("id").asLong();
 
-        MessageResponse messageResponse = messageService.saveMessage(request, senderId);
+        log.debug("Parsed sender ID: {}", senderId);
 
+        MessageResponse messageResponse = messageService.saveMessage(request, senderId);
 
         simpMessagingTemplate.convertAndSendToUser(request.getReceiverId().toString(),
                 "/queue/reply", messageResponse
@@ -62,6 +67,7 @@ public class ChatController {
                 messageResponse
         );
 
+        log.info("Message sent from {} to {}", senderId, request.getReceiverId());
     }
 
     @GetMapping("/api/chat/history")
@@ -69,7 +75,9 @@ public class ChatController {
             @RequestHeader("Authorization") String tokenHeader,
             @RequestParam("interlocutorId") Long interlocutorId
     ) {
+        log.info("Fetching chat history with {}", interlocutorId);
         if (tokenHeader == null || tokenHeader.isEmpty()) {
+            log.warn("Missing Authorization header");
             throw new RuntimeException("Authorization header is missing");
         }
         String token = tokenHeader.startsWith("Bearer ") ? tokenHeader.substring(7) : tokenHeader;
@@ -82,21 +90,26 @@ public class ChatController {
         }
 
         if (chatOpt.isEmpty()) {
+            log.info("No chat found between users {} and {}", currentUserId, interlocutorId);
             return List.of();
         }
         Chat chat = chatOpt.get();
         List<Message> messages = messageRepository.findAllByChatOrderByCreatedAtAsc(chat);
-        System.out.println(messages);
+        log.debug("Found {} messages", messages.size());
+
         return messages.stream().map(MessageDto::from).toList();
     }
     @GetMapping("/api/chat/message/{id}")
     public ResponseEntity<MessageDto> getMessageById(@PathVariable Long id) {
+        log.info("Getting message by ID: {}", id);
         Optional<Message> msg = messageRepository.findById(id);
-        if (msg.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(MessageDto.from(msg.get()));
+        return msg.map(message -> {
+                    log.debug("Message found: {}", message);
+                    return ResponseEntity.ok(MessageDto.from(message));
+                })
+                .orElseGet(() -> {
+                    log.warn("Message with ID {} not found", id);
+                    return ResponseEntity.notFound().build();
+                });
     }
-
-
 }

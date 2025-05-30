@@ -3,20 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:6434/impulse_db
+    url: jdbc:postgresql://db:6434/impulse_db
     username: postgres
     password: postgres
-    driver-class-name: org.postgresql.Driver
-
-
-
-  jpa:
-    database: postgresql
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        hbm2ddl:
-          auto: update
 
 jwt:
   secret: secret-key
@@ -27,10 +16,12 @@ api:
   cors:
     allowed-origins: http://localhost:8080,http://localhost:5173,http://localhost:5174
       
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource: DEBUG
-    com.zaxxer.hikari.HikariDataSource: DEBUG
-    ru.itis.impulse_back.config.db: DEBUG
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  prometheus:
+    metrics:
+      export:
+        enabled: true
