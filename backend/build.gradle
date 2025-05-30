@@ -40,15 +40,22 @@ dependencies {
 	implementation("org.webjars:jquery:3.6.0")
 	implementation("org.webjars:bootstrap:4.6.0")
 	implementation("org.webjars:webjars-locator-core:0.46")
+	implementation 'org.seleniumhq.selenium:selenium-java:4.21.0'
 
 	compileOnly 'org.projectlombok:lombok'
 
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
 
+
+	testImplementation 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'junit:junit:4.13.2'
+	testImplementation 'org.seleniumhq.selenium:selenium-java:4.20.0'
+	testImplementation 'commons-io:commons-io:2.15.1'
+	testImplementation 'io.github.bonigarcia:webdrivermanager:5.7.0'
 }
 
 tasks.named('test') {
