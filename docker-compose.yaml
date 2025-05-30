@@ -151,6 +151,8 @@ services:
       - "8080:8080"
     depends_on:
       - haproxy
+    networks:
+      - postgres-ha
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://haproxy:5432/impulse_db
       SPRING_DATASOURCE_USERNAME: postgres
