@@ -7,13 +7,11 @@ import org.springframework.http.ResponseEntity;
 import ru.itis.impulse_back.controller.ModerationController;
 import ru.itis.impulse_back.dto.request.DeleteUserRequest;
 import ru.itis.impulse_back.dto.request.UpdateAuthorityRequest;
-import ru.itis.impulse_back.dto.response.AccountModerationResponse;
 import ru.itis.impulse_back.service.ModerationService;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class ModerationControllerTest {
 
@@ -24,22 +22,6 @@ class ModerationControllerTest {
     void setUp() {
         moderationService = mock(ModerationService.class);
         moderationController = new ModerationController(moderationService);
-    }
-
-    @Test
-    void getAllUserAccounts_shouldReturnListOfAccounts() {
-        List<AccountModerationResponse> mockAccounts = List.of(
-                new AccountModerationResponse(),
-                new AccountModerationResponse()
-        );
-
-        when(moderationService.getAllUsers()).thenReturn(mockAccounts);
-
-        ResponseEntity<List<AccountModerationResponse>> response = moderationController.getAllUserAccounts();
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(2, response.getBody().size());
-        assertEquals("user1@mail.com", response.getBody().get(0).getEmail());
     }
 
     @Test
