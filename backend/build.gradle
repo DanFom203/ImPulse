@@ -52,7 +52,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	testImplementation 'junit:junit:4.13.2'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
 	testImplementation 'org.seleniumhq.selenium:selenium-java:4.20.0'
 	testImplementation 'commons-io:commons-io:2.15.1'
 	testImplementation 'io.github.bonigarcia:webdrivermanager:5.7.0'

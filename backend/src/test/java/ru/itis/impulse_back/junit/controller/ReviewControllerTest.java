@@ -3,7 +3,6 @@ package ru.itis.impulse_back.junit.controller;
 import com.auth0.jwt.interfaces.Claim;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.ResponseEntity;
 import ru.itis.impulse_back.controller.ReviewController;
 import ru.itis.impulse_back.dto.request.CreateReviewRequest;
@@ -13,6 +12,7 @@ import ru.itis.impulse_back.model.User;
 import ru.itis.impulse_back.security.service.JWTService;
 import ru.itis.impulse_back.service.ReviewService;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
-@WebMvcTest(ReviewController.class)
-class ReviewControllerTest {
+public class ReviewControllerTest {
 
     private ReviewService reviewService;
     private JWTService jwtService;
@@ -35,53 +34,65 @@ class ReviewControllerTest {
     }
 
     @Test
-    void getAllByClient_shouldReturnReviewList() {
-        String token = "Bearer fake.jwt.token";
-        Long userId = 1L;
+    void getAllByClient_shouldReturnListOfReviews() {
+        String token = "Bearer faketoken";
+        Long clientId = 1L;
 
-        Claim mockClaim = mock(Claim.class);
-        when(mockClaim.asLong()).thenReturn(userId);
-        when(jwtService.getClaims("fake.jwt.token")).thenReturn(Map.of("id", mockClaim));
+        Map<String, Claim> claims = new HashMap<>();
+        Claim idClaim = mock(Claim.class);
+        when(idClaim.asLong()).thenReturn(clientId);
+        claims.put("id", idClaim);
+        when(jwtService.getClaims("faketoken")).thenReturn(claims);
 
-        User client = User.builder().id(userId).fullName("Client Name").build();
-        User specialist = User.builder()
-                .id(2L)
-                .fullName("Specialist Name")
-                .specialistAvgRating(4.5)
-                .build();
-        Review review = Review.builder()
-                .id(10L)
-                .client(client)
-                .specialist(specialist)
-                .rating(5)
-                .comment("Great session")
-                .build();
+        User client = new User();
+        client.setId(clientId);
+        client.setFullName("Client User");
 
-        when(reviewService.getAllByClientId(userId)).thenReturn(List.of(review));
+        User specialist = new User();
+        specialist.setId(2L);
+        specialist.setFullName("Specialist Name");
+        specialist.setSpecialistAvgRating(4.5);
+
+
+        Review review = new Review();
+        review.setId(10L);
+        review.setClient(client);
+        review.setSpecialist(specialist);
+        review.setRating(5);
+        review.setComment("Great session");
+
+        when(reviewService.getAllByClientId(clientId)).thenReturn(List.of(review));
 
         ResponseEntity<List<ReviewResponse>> response = reviewController.getAllByClient(token);
 
         assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody());
         assertEquals(1, response.getBody().size());
-        assertEquals("Client Name", response.getBody().get(0).getClient().getFullName());
+        assertEquals("Client User", response.getBody().get(0).getClient().getFullName());
         assertEquals("Specialist Name", response.getBody().get(0).getSpecialist().getFullName());
     }
 
     @Test
-    void create_shouldCallServiceAndReturn201() {
-        String token = "Bearer fake.jwt.token";
+    void create_shouldReturnCreatedStatus() {
+        String token = "Bearer faketoken";
         Long clientId = 1L;
         Long specialistId = 2L;
-        CreateReviewRequest request = new CreateReviewRequest("Отлично", 5);
 
-        Claim mockClaim = mock(Claim.class);
-        when(mockClaim.asLong()).thenReturn(clientId);
-        when(jwtService.getClaims("fake.jwt.token")).thenReturn(Map.of("id", mockClaim));
+        CreateReviewRequest request = CreateReviewRequest.builder()
+                .rating(5)
+                .comment("Excellent!")
+                .build();
+
+        Map<String, Claim> claims = new HashMap<>();
+        Claim idClaim = mock(Claim.class);
+        when(idClaim.asLong()).thenReturn(clientId);
+        claims.put("id", idClaim);
+        when(jwtService.getClaims("faketoken")).thenReturn(claims);
 
         ResponseEntity<Void> response = reviewController.create(request, token, specialistId);
 
-        verify(reviewService, times(1)).create(request, clientId, specialistId);
+        verify(reviewService).create(request, clientId, specialistId);
+
         assertEquals(201, response.getStatusCodeValue());
     }
 }

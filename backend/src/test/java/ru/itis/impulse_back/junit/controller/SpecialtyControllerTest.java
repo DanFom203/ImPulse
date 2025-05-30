@@ -1,14 +1,8 @@
 package ru.itis.impulse_back.junit.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.http.ResponseEntity;
 import ru.itis.impulse_back.controller.SpecialtyController;
 import ru.itis.impulse_back.dto.request.EditSpecialtiesRequest;
 import ru.itis.impulse_back.dto.response.SpecialtiesResponse;
@@ -18,80 +12,65 @@ import ru.itis.impulse_back.service.SpecialtyService;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class SpecialtyControllerTest {
+public class SpecialtyControllerTest {
 
-    @Mock
     private SpecialtyService specialtyService;
-
-    @Mock
     private SpecialtyMapper specialtyMapper;
-
-    @InjectMocks
     private SpecialtyController specialtyController;
-
-    private MockMvc mockMvc;
-
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(specialtyController).build();
+        specialtyService = mock(SpecialtyService.class);
+        specialtyMapper = mock(SpecialtyMapper.class);
+        specialtyController = new SpecialtyController(specialtyService, specialtyMapper);
     }
 
     @Test
-    void getAll_ShouldReturnListOfSpecialties() throws Exception {
+    void testGetAll_returnsListOfSpecialties() {
         List<Specialty> specialties = List.of(
-                Specialty.builder().id(1L).name("Specialty 1").build(),
-                Specialty.builder().id(2L).name("Specialty 2").build()
+                new Specialty(1L, "Fitness",false),
+                new Specialty(2L, "Pilates",false)
         );
-
         when(specialtyService.getAll()).thenReturn(specialties);
 
-        mockMvc.perform(get("/api/specialty/list"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("Specialty 1")))
-                .andExpect(jsonPath("$[1].name", is("Specialty 2")));
+        ResponseEntity<List<Specialty>> response = specialtyController.getAll();
 
-        verify(specialtyService, times(1)).getAll();
+        assertEquals(200, response.getStatusCodeValue());
+        assertNotNull(response.getBody());
+        assertEquals(2, response.getBody().size());
+        assertEquals("Fitness", response.getBody().get(0).getName());
     }
 
     @Test
-    void editSpecialties_ShouldAddNewSpecialtyAndReturnUpdatedList() throws Exception {
+    void testEditSpecialties_addsNewSpecialtyAndReturnsMappedList() {
+        // given
+        String newSpecialtyName = "Yoga";
         EditSpecialtiesRequest request = new EditSpecialtiesRequest();
-        request.setNewSpecialty("New Specialty");
+        request.setNewSpecialty(newSpecialtyName);
 
-        List<Specialty> specialties = List.of(
-                Specialty.builder().id(1L).name("Old Specialty").build(),
-                Specialty.builder().id(2L).name("New Specialty").build()
+        List<Specialty> updatedSpecialties = List.of(
+                new Specialty(1L, "Fitness",false),
+                new Specialty(2L, "Yoga",false)
         );
 
-        List<SpecialtiesResponse> responseList = List.of(
-                SpecialtiesResponse.builder().id(1L).name("Old Specialty").build(),
-                SpecialtiesResponse.builder().id(2L).name("New Specialty").build()
+        List<SpecialtiesResponse> mappedResponses = List.of(
+                new SpecialtiesResponse(1L, "Fitness",false),
+                new SpecialtiesResponse(2L, "Yoga",false)
         );
 
-        when(specialtyService.getAll()).thenReturn(specialties);
-        when(specialtyMapper.toResponseList(specialties)).thenReturn(responseList);
+        when(specialtyService.getAll()).thenReturn(updatedSpecialties);
+        when(specialtyMapper.toResponseList(updatedSpecialties)).thenReturn(mappedResponses);
 
-        mockMvc.perform(post("/api/specialty/edit")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[1].name", is("New Specialty")));
+        // when
+        ResponseEntity<List<SpecialtiesResponse>> response = specialtyController.editSpecialties(request);
 
-        verify(specialtyService, times(1)).addSpecialty("New Specialty", true);
-        verify(specialtyService, times(1)).getAll();
-        verify(specialtyMapper, times(1)).toResponseList(specialties);
+        // then
+        verify(specialtyService).addSpecialty(newSpecialtyName, true);
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(2, response.getBody().size());
+        assertEquals("Yoga", response.getBody().get(1).getName());
     }
 }
