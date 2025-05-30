@@ -52,8 +52,8 @@ export default {
   data() {
     return {
       form: {
-        email: 'ilya@ilya.com',
-        password: '123123'
+        email: '',
+        password: ''
       }
     }
   },
@@ -95,4 +95,4 @@ export default {
 }
 </script>
 
-<style src="@/assets/Auth.css"></style>
+<style src="@/assets/auth.css"></style>

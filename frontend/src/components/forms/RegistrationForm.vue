@@ -65,18 +65,6 @@
           <label :class="{ active: form.role === 'SPECIALIST' }" for="role-specialist">
             Специалист
           </label>
-
-          <input
-              type="radio"
-              name="role"
-              id="role-moderator"
-              value="MODERATOR"
-              v-model="form.role"
-              hidden
-          />
-          <label :class="{ active: form.role === 'MODERATOR' }" for="role-moderator">
-            Модератор
-          </label>
         </div>
       </template>
 
