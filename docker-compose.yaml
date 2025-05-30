@@ -46,36 +46,126 @@ services:
       - prometheus
       - loki
 
+  pg-1:
+    container_name: postgres_1
+    image: docker.io/bitnami/postgresql-repmgr:14.9.0
+    ports:
+      - "6432:5432"
+    volumes:
+      - pg_1_data:/bitnami/postgresql
+    environment:
+      - POSTGRESQL_POSTGRES_PASSWORD=postgres
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_DATABASE=impulse_db
+      - REPMGR_PASSWORD=repmgrpassword
+      - REPMGR_PRIMARY_HOST=pg-1
+      - REPMGR_PRIMARY_PORT=5432
+      - REPMGR_PARTNER_NODES=pg-1,pg-2:5432
+      - REPMGR_NODE_NAME=pg-1
+      - REPMGR_NODE_NETWORK_NAME=pg-1
+      - REPMGR_PORT_NUMBER=5432
+      - REPMGR_RECONNECT_ATTEMPTS=1
+      - REPMGR_RECONNECT_INTERVAL=1
+      - REPMGR_MASTER_RESPONSE_TIMEOUT=1
+      - REPMGRD_ENABLED=yes
+    restart: unless-stopped
+    networks:
+      - postgres-ha
+
+  pg-2:
+    container_name: postgres_2
+    image: docker.io/bitnami/postgresql-repmgr:14.9.0
+    ports:
+      - "6433:5432"
+    volumes:
+      - pg_2_data:/bitnami/postgresql
+    environment:
+      - POSTGRESQL_POSTGRES_PASSWORD=postgres
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_DATABASE=impulse_db
+      - REPMGR_PASSWORD=repmgrpassword
+      - REPMGR_PRIMARY_HOST=pg-1
+      - REPMGR_PRIMARY_PORT=5432
+      - REPMGR_PARTNER_NODES=pg-1,pg-2:5432
+      - REPMGR_NODE_NAME=pg-2
+      - REPMGR_NODE_NETWORK_NAME=pg-2
+      - REPMGR_PORT_NUMBER=5432
+      - REPMGR_RECONNECT_ATTEMPTS=1
+      - REPMGR_RECONNECT_INTERVAL=1
+      - REPMGR_MASTER_RESPONSE_TIMEOUT=1
+      - REPMGRD_ENABLED=yes
+    restart: unless-stopped
+    networks:
+      - postgres-ha
+
+  haproxy:
+    container_name: haproxy
+    image: haproxy:2.9
+    ports:
+      - "6434:5432"  # наружный порт
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on:
+      - pg-1
+      - pg-2
+    networks:
+      - postgres-ha
+    restart: unless-stopped
+
+  pg_exporter-1:
+    container_name: pg_exporter_1
+    image: prometheuscommunity/postgres-exporter:v0.11.1
+    environment:
+      DATA_SOURCE_URI: "pg-1:5432/impulse_db?sslmode=disable"
+      DATA_SOURCE_USER: postgres
+      DATA_SOURCE_PASS: postgres
+    ports:
+      - "9187:9187"
+    networks:
+      - postgres-ha
+    restart: unless-stopped
+    depends_on:
+      - pg-1
+
+  pg_exporter-2:
+    container_name: pg_exporter_2
+    image: prometheuscommunity/postgres-exporter:v0.11.1
+    environment:
+      DATA_SOURCE_URI: "pg-2:5432/impulse_db?sslmode=disable"
+      DATA_SOURCE_USER: postgres
+      DATA_SOURCE_PASS: postgres
+    ports:
+      - "9188:9187"
+    networks:
+      - postgres-ha
+    restart: unless-stopped
+    depends_on:
+      - pg-2
+
   backend:
     build: ./backend
     container_name: backend
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      - haproxy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/impulse_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://haproxy:5432/impulse_db
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: Danfom2004
+      SPRING_DATASOURCE_PASSWORD: postgres
     logging:
       driver: json-file
       options:
         tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
 
-  db:
-    image: postgres:15
-    container_name: postgres
-    environment:
-      POSTGRES_DB: impulse_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Danfom2004
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./init-scripts:/docker-entrypoint-initdb.d
-      - pgdata:/var/lib/postgresql/data
-
 volumes:
-  pgdata:
+  pg_1_data:
+  pg_2_data:
   grafanadata:
   prometheusdata:
+
+networks:
+  postgres-ha:
+    driver: bridge

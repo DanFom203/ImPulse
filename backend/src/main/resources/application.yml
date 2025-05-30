@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://db:6434/impulse_db
+    url: jdbc:postgresql://haproxy:5432/impulse_db
     username: postgres
     password: postgres
 
