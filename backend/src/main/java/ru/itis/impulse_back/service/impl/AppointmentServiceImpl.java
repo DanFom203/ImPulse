@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.itis.impulse_back.dto.request.CreateAppointmentRequest;
 import ru.itis.impulse_back.exception.AppointmentNotFoundException;
 import ru.itis.impulse_back.model.Appointment;
@@ -52,7 +53,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             appointmentRepository.save(appointment);
         }
     }
-
+    @Transactional(readOnly = true)
     @Override
     public List<Appointment> getAllByUserId(Long userId) {
         User user = userRepository.findById(userId).get();

@@ -39,7 +39,6 @@
     this.pollingInterval = setInterval(this.pollForNewMessages, 10000)
 },
     beforeDestroy() {
-    //  очищаем таймер при уничтожении компонента
     if (this.pollingInterval) {
     clearInterval(this.pollingInterval)
     this.pollingInterval = null
@@ -139,7 +138,7 @@
     console.log('🔍 onMessageReceived: разобранный payload:', payload);
     console.log('🧾 onMessageReceived: JSON содержимое msg.body:\n', JSON.stringify(payload, null, 2));
 
-    // Проверяем, что сообщение относится к текущему собеседнику
+
     if (
     (payload.senderId === this.interlocutor.id && payload.receiverId === this.currentUserId) ||
     (payload.senderId === this.currentUserId && payload.receiverId === this.interlocutor.id)
@@ -168,7 +167,7 @@
                 return alert('Not authenticated')
             }
 
-            // Определяем роль текущего пользователя
+
             const currentUserRole = this.getUserRole(this.currentUserId)
 
             const payload = {
@@ -190,12 +189,8 @@
             console.log('🔍 sendMessage: поле ввода очищено')
         },
         getUserRole(userId) {
-            // Предполагаем, что у interlocutor есть поле role: 'client' или 'specialist'
-            // и что текущий пользователь - противоположная роль.
-            // Если у тебя данные устроены иначе — адаптируй под себя.
 
             if (userId === this.currentUserId) {
-                // Определим роль текущего пользователя, исходя из interlocutor.role
                 return this.interlocutor.role === 'specialist' ? 'client' : 'specialist'
             } else if (userId === this.interlocutor.id) {
                 return this.interlocutor.role

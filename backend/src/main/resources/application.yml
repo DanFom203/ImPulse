@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://db:5432/impulse_db
+    url: jdbc:postgresql://db:6434/impulse_db
     username: postgres
-    password: Danfom2004
+    password: postgres
 
 jwt:
   secret: secret-key
