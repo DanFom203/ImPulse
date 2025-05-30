@@ -4,9 +4,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.itis.impulse_back.dto.response.AccountModerationResponse;
+import ru.itis.impulse_back.exception.UserNotFoundException;
 import ru.itis.impulse_back.mapper.AccountMapper;
 import ru.itis.impulse_back.model.User;
-import ru.itis.impulse_back.repository.UserRepository;
+import ru.itis.impulse_back.repository.*;
 import ru.itis.impulse_back.service.ModerationService;
 
 import java.util.List;
@@ -17,6 +18,10 @@ import java.util.Optional;
 public class ModerationServiceImpl implements ModerationService {
 
     private final UserRepository userRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final ChatRepository chatRepository;
+    private final MessageRepository messageRepository;
+    private final ReviewRepository reviewRepository;
     private final AccountMapper accountMapper;
 
     @Override
@@ -38,6 +43,18 @@ public class ModerationServiceImpl implements ModerationService {
     @Override
     @Transactional
     public void deleteUserByEmail(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        user.getSpecialties().clear();
+        userRepository.save(user);
+
+        messageRepository.deleteAllBySenderOrReceiver(user, user);
+        appointmentRepository.deleteAllByClientOrSpecialist(user, user);
+        chatRepository.deleteAllByFirstParticipantOrSecondParticipant(user, user);
+        reviewRepository.deleteAllByClientOrSpecialist(user, user);
+
         userRepository.deleteUserByEmail(email);
     }
 }

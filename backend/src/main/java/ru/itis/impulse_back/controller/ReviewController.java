@@ -1,6 +1,7 @@
 package ru.itis.impulse_back.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import ru.itis.impulse_back.service.ReviewService;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("${api.uri}/review")
 @RequiredArgsConstructor
@@ -21,8 +23,10 @@ public class ReviewController {
 
     @GetMapping("/by-me")
     public ResponseEntity<List<ReviewResponse>> getAllByClient(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long clientId = jwtService.getClaims(token.substring(7)).get("id").asLong();
+        log.info("Fetching reviews written by client with ID: {}", clientId);
 
-        List<ReviewResponse> reviews = reviewService.getAllByClientId(jwtService.getClaims(token.substring(7)).get("id").asLong())
+        List<ReviewResponse> reviews = reviewService.getAllByClientId(clientId)
                 .stream()
                 .map(r -> ReviewResponse.builder()
                         .id(r.getId())
@@ -41,13 +45,18 @@ public class ReviewController {
                         .createdAt(r.getCreatedAt())
                         .build()).toList();
 
+        log.debug("Found {} reviews by client ID {}", reviews.size(), clientId);
         return ResponseEntity.ok(reviews);
     }
 
     @PostMapping("/new/{specialistId}")
     public ResponseEntity<Void> create(@RequestBody CreateReviewRequest request, @RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable Long specialistId) {
-        reviewService.create(request, jwtService.getClaims(token.substring(7)).get("id").asLong(), specialistId);
+        Long clientId = jwtService.getClaims(token.substring(7)).get("id").asLong();
+        log.info("Client {} is creating a review for specialist {}", clientId, specialistId);
 
+        reviewService.create(request, clientId, specialistId);
+
+        log.info("Review created successfully by client {}", clientId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

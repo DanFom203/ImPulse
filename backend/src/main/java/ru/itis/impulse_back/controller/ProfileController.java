@@ -1,6 +1,7 @@
 package ru.itis.impulse_back.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import ru.itis.impulse_back.service.UserService;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("${api.uri}/profile")
 @RequiredArgsConstructor
@@ -27,14 +29,17 @@ public class ProfileController {
             @RequestBody List<Long> specialties,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token
     ) {
-        specialistService.updateSpecialties(specialties, jwtService.getClaims(token.substring(7)).get("id").asLong());
-
+        Long userId = jwtService.getClaims(token.substring(7)).get("id").asLong();
+        log.info("Updating specialties for user {}", userId);
+        specialistService.updateSpecialties(specialties, userId);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/delete")
     public ResponseEntity<Void> deleteAccount(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        userService.deleteAccount(jwtService.getClaims(token.substring(7)).get("id").asLong());
+        Long userId = jwtService.getClaims(token.substring(7)).get("id").asLong();
+        log.info("Deleting account for user {}", userId);
+        userService.deleteAccount(userId);
         return ResponseEntity.ok().build();
     }
 
@@ -43,11 +48,14 @@ public class ProfileController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
             @RequestBody UpdateSpecialistInfoRequest request
     ) {
-        UserDetailsResponse specialistResponse = specialistService.updateSpecialistInfo(
-                jwtService.getClaims(token.substring(7)).get("id").asLong(),
+        Long userId = jwtService.getClaims(token.substring(7)).get("id").asLong();
+        log.info("Updating profile info for specialist {}", userId);
+        UserDetailsResponse response = specialistService.updateSpecialistInfo(
+                userId,
                 request.getSpecialistBio(),
-                request.getSpecialistPrice());
-        return ResponseEntity.ok().body(specialistResponse);
+                request.getSpecialistPrice()
+        );
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/update/avatar")
@@ -56,6 +64,7 @@ public class ProfileController {
             @RequestBody UpdateUserPhotoRequest request
     ) {
         Long userId = jwtService.getClaims(token.substring(7)).get("id").asLong();
+        log.info("Updating profile photo for user {}", userId);
         UserDetailsResponse response = userService.updateUserProfilePhoto(userId, request.getProfilePhotoUrl());
         return ResponseEntity.ok(response);
     }

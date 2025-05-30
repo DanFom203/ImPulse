@@ -1,6 +1,7 @@
 package ru.itis.impulse_back.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import ru.itis.impulse_back.service.AppointmentService;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("${api.uri}/appointment")
 @RequiredArgsConstructor
@@ -21,19 +23,25 @@ public class AppointmentController {
 
     @PostMapping("/new")
     public ResponseEntity<Void> create(@RequestBody CreateAppointmentRequest request, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        appointmentService.create(request, jwtService.getClaims(token.substring(7)).get("id").asLong());
+        Long userId = jwtService.getClaims(token.substring(7)).get("id").asLong();
+        log.info("User [{}] creating appointment: {}", userId, request);
+        appointmentService.create(request, userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/approve/{appointmentId}")
     public ResponseEntity<Void> approve(@PathVariable Long appointmentId, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        appointmentService.approve(appointmentId, jwtService.getClaims(token.substring(7)).get("id").asLong());
+        Long userId = jwtService.getClaims(token.substring(7)).get("id").asLong();
+        log.info("User [{}] approving appointment [{}]", userId, appointmentId);
+        appointmentService.approve(appointmentId, userId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<AppointmentResponse>> getAll(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        List<AppointmentResponse> appointments = appointmentService.getAllByUserId(jwtService.getClaims(token.substring(7)).get("id").asLong())
+        Long userId = jwtService.getClaims(token.substring(7)).get("id").asLong();
+        log.debug("Getting all appointments for user [{}]", userId);
+        List<AppointmentResponse> appointments = appointmentService.getAllByUserId(userId)
                 .stream()
                 .map(a -> AppointmentResponse.builder()
                         .id(a.getId())
