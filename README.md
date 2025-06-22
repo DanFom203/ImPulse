@@ -17,8 +17,9 @@
 
 ### Запуск (в ветке develop)
 ./run.sh -t v1
+![run.png](imgs/run.png)
 
-##Результаты:
+## Результаты:
 ![grafana.png](imgs/grafana.png)
 ![docker_images.png](imgs/docker_images.png)
 ![docker_containers.png](imgs/docker_containers.png)
