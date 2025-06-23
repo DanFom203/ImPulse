@@ -154,7 +154,7 @@ services:
 
   backend:
     container_name: backend
-    image: backend:v1.0
+    image: backend:${TAG}
     ports:
       - "8080:8080"
     depends_on:
@@ -172,7 +172,7 @@ services:
 
   frontend:
     container_name: frontend
-    image: frontend:v1.0
+    image: frontend:${TAG}
     ports:
       - "80:80"
     depends_on:
