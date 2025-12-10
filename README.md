@@ -10,13 +10,15 @@
 ## Запуск
 Осуществлялся запуск на JDK21, в Git Bash терминале Windows 11.
 
+### ВАЖНО!
+image: docker.io/bitnami/postgresql-repmgr:14.9.0 стал платным, и сборка проекта с репликацией баз данных (master-slave) теперь недоступна бесплатно. Мы работаем над версией проекта без репликации в отдельной ветке develop-hotfix-no-replication.
 
 ### Сборка (в ветке develop)
-./build.sh -t v1
+./build.sh -t v1.0
 ![build_cmd.png](imgs/build_cmd.png)
 
 ### Запуск (в ветке develop)
-./run.sh -t v1
+./run.sh -t v1.0
 ![run.png](imgs/run.png)
 
 ## Результаты:
